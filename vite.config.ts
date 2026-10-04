@@ -8,5 +8,20 @@ export default defineConfig({
     alias: {
       '@': '/src'
     }
+  },
+  base: './',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  },
+  server: {
+    host: true,
+    port: 5173
   }
 })
