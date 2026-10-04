@@ -244,13 +244,13 @@ const KenyaMap: React.FC = () => {
               cx="140"
               cy="135"
               r="6"
-              fill={getCountyColor('bungoma-south')}
+              fill={getCountyColor('bungoma')}
               stroke="#374151"
               strokeWidth="1"
               className="cursor-pointer hover:stroke-safaricom-green transition-all"
-              onMouseEnter={(e) => handleMouseEnter('bungoma-south', e)}
+              onMouseEnter={(e) => handleMouseEnter('bungoma', e)}
               onMouseLeave={handleMouseLeave}
-              opacity={hoveredCounty === 'bungoma-south' ? 0.9 : getCountyOpacity('bungoma-south')}
+              opacity={hoveredCounty === 'bungoma' ? 0.9 : getCountyOpacity('bungoma')}
             />
             <text x="140" y="125" textAnchor="middle" className="fill-gray-700 text-xs">
               Bungoma
