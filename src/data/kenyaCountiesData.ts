@@ -1,3 +1,5 @@
+import { allCounties } from './kenyaAdministrative'
+
 export interface CountyPerformanceData {
   id: string
   county: string
@@ -9,178 +11,52 @@ export interface CountyPerformanceData {
   targetAchieved: number
   status: 'unassigned' | 'assigned' | 'active' | 'inactive'
   trend: 'up' | 'down' | 'stable'
+  region: string
 }
 
-export const kenyaCountiesData: CountyPerformanceData[] = [
-  {
-    id: 'nairobi',
-    county: 'Nairobi',
-    totalCitizens: 4500000,
-    registered: 218981,
-    unresolved: 0,
-    resolved: 218981,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'stable'
-  },
-  {
-    id: 'mombasa',
-    county: 'Mombasa',
-    totalCitizens: 1200000,
-    registered: 142930,
-    unresolved: 0,
-    resolved: 142930,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'up'
-  },
-  {
-    id: 'kiambu',
-    county: 'Kiambu',
-    totalCitizens: 2400000,
-    registered: 147919,
-    unresolved: 0,
-    resolved: 147919,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'stable'
-  },
-  {
-    id: 'nakuru',
-    county: 'Nakuru',
-    totalCitizens: 2162202,
-    registered: 152797,
-    unresolved: 0,
-    resolved: 152797,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'down'
-  },
-  {
-    id: 'machakos',
-    county: 'Machakos',
-    totalCitizens: 1421932,
-    registered: 218981,
-    unresolved: 0,
-    resolved: 218981,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'stable'
-  },
-  {
-    id: 'bungoma-south',
-    county: 'Bungoma South',
-    totalCitizens: 1670570,
-    registered: 146969,
-    unresolved: 0,
-    resolved: 146969,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'stable'
-  },
-  {
-    id: 'siaya',
-    county: 'Siaya',
-    totalCitizens: 993183,
-    registered: 197127,
-    unresolved: 0,
-    resolved: 197127,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'up'
-  },
-  {
-    id: 'kilifi',
-    county: 'Kilifi',
-    totalCitizens: 1453787,
-    registered: 147848,
-    unresolved: 0,
-    resolved: 147848,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'stable'
-  },
-  {
-    id: 'vihiga',
-    county: 'Vihiga',
-    totalCitizens: 590013,
-    registered: 173877,
-    unresolved: 0,
-    resolved: 173877,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'stable'
-  },
-  {
-    id: 'kakamega',
-    county: 'Kakamega',
-    totalCitizens: 1867579,
-    registered: 109692,
-    unresolved: 0,
-    resolved: 109692,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'down'
-  },
-  {
-    id: 'murang-east',
-    county: 'Murang\'a East',
-    totalCitizens: 1056640,
-    registered: 111963,
-    unresolved: 0,
-    resolved: 111963,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'stable'
-  },
-  {
-    id: 'gatundu-north',
-    county: 'Gatundu North',
-    totalCitizens: 157815,
-    registered: 98682,
-    unresolved: 0,
-    resolved: 98682,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'stable'
-  },
-  {
-    id: 'jomba-south',
-    county: 'Jomba South',
-    totalCitizens: 180000,
-    registered: 90369,
-    unresolved: 0,
-    resolved: 90369,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'stable'
-  },
-  {
-    id: 'nyamira',
-    county: 'Nyamira',
-    totalCitizens: 605576,
-    registered: 102714,
-    unresolved: 0,
-    resolved: 102714,
-    conversionRate: 0,
-    targetAchieved: 0,
-    status: 'unassigned',
-    trend: 'up'
+// Generate realistic performance data for all 47 counties
+export const kenyaCountiesData: CountyPerformanceData[] = allCounties.map(county => {
+  // Generate realistic registered users (5-15% of population)
+  const registrationRate = 0.05 + Math.random() * 0.10
+  const registered = Math.floor(county.population * registrationRate)
+  
+  // Generate resolution data (80-95% resolution rate)
+  const resolutionRate = 0.8 + Math.random() * 0.15
+  const resolved = Math.floor(registered * resolutionRate)
+  const unresolved = registered - resolved
+  
+  // Generate conversion and target data
+  const conversionRate = Math.random() * 5 // 0-5%
+  const targetAchieved = Math.random() * 100 // 0-100%
+  
+  // Determine status based on population and activity
+  let status: 'unassigned' | 'assigned' | 'active' | 'inactive'
+  if (county.population > 1000000) status = 'active'
+  else if (county.population > 500000) status = 'assigned'
+  else if (registered > 50000) status = 'assigned'
+  else status = 'unassigned'
+  
+  // Determine trend
+  const trendRandom = Math.random()
+  let trend: 'up' | 'down' | 'stable'
+  if (trendRandom < 0.3) trend = 'up'
+  else if (trendRandom < 0.6) trend = 'stable'
+  else trend = 'down'
+
+  return {
+    id: county.id,
+    county: county.name,
+    totalCitizens: county.population,
+    registered,
+    unresolved,
+    resolved,
+    conversionRate,
+    targetAchieved,
+    status,
+    trend,
+    region: county.region
   }
-]
+})
 
 // Additional data for Sema feedback categorization
 export const feedbackCategories = {
