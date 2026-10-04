@@ -26,7 +26,7 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
   const handleMouseEnter = (countyId: string, event: React.MouseEvent) => {
     const county = kenyaCountiesData.find(c => c.id === countyId)
     if (county) {
-      const rect = (event.currentTarget as HTMLElement).closest('svg')?.getBoundingClientRect()
+      const rect = (event.currentTarget as HTMLElement).closest('.relative')?.getBoundingClientRect()
       if (rect) {
         const resolutionRate = (county.resolved / Math.max(county.registered, 1)) * 100
         const locationPath = getLocationPath(undefined, undefined, countyId)
@@ -102,91 +102,46 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
     <div className="card">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance by County</h3>
       
-      <div className="relative bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border" style={{ height: '500px' }}>
+      <div 
+        className="relative bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border overflow-hidden" 
+        style={{ height: '500px' }}
+      >
+        {/* Fallback gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-green-100 via-green-200 to-green-300" />
+        
+        {/* Background Kenya Map Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-90"
+          style={{
+            backgroundImage: `url('/images/kenya-map.jpg')`,
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            filter: 'hue-rotate(15deg) saturate(1.1) sepia(0.2)'
+          }}
+          onError={(e) => {
+            // Fallback to a solid green background if image fails to load
+            e.currentTarget.style.display = 'none'
+          }}
+        />
+        
+        {/* Green overlay for Safaricom theme */}
+        <div className="absolute inset-0 bg-gradient-to-br from-green-100/40 to-green-200/40" />
+        
+        {/* Interactive SVG overlay for county interactions */}
         <svg
           width="100%"
           height="100%"
-          viewBox="0 0 400 600"
-          className="w-full h-full"
+          viewBox="0 0 400 500"
+          className="w-full h-full relative z-10"
         >
-          {/* Kenya country background with accurate shape */}
-          <defs>
-            <linearGradient id="kenyaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{stopColor:'#00A651', stopOpacity:0.15}} />
-              <stop offset="50%" style={{stopColor:'#00A651', stopOpacity:0.25}} />
-              <stop offset="100%" style={{stopColor:'#00A651', stopOpacity:0.15}} />
-            </linearGradient>
-            <filter id="shadow">
-              <feDropShadow dx="2" dy="2" stdDeviation="2" floodOpacity="0.3"/>
-            </filter>
-          </defs>
-          
-          {/* Kenya country outline - more accurate shape */}
-          <path
-            d="M 75 85 
-               C 85 75, 100 70, 120 65
-               C 140 60, 160 55, 180 52
-               C 200 48, 220 45, 240 42
-               C 260 40, 280 38, 300 38
-               C 320 38, 340 40, 355 45
-               C 365 50, 372 58, 375 70
-               C 378 85, 380 100, 382 120
-               C 384 140, 385 160, 386 180
-               C 387 200, 388 220, 388 240
-               C 388 260, 387 280, 385 300
-               C 383 320, 380 340, 376 360
-               C 372 380, 367 400, 360 420
-               C 353 440, 345 458, 335 475
-               C 325 490, 312 502, 298 510
-               C 284 518, 268 523, 252 526
-               C 236 529, 220 530, 204 530
-               C 188 530, 172 529, 157 526
-               C 142 523, 128 518, 115 510
-               C 103 502, 92 491, 83 478
-               C 75 465, 69 450, 65 434
-               C 61 418, 59 401, 58 384
-               C 57 367, 57 350, 58 333
-               C 59 316, 60 299, 62 282
-               C 64 265, 66 248, 68 231
-               C 70 214, 71 197, 72 180
-               C 73 163, 73 146, 73 129
-               C 73 112, 73 95, 74 87
-               C 74.5 82, 75 85
-               Z"
-            fill="url(#kenyaGradient)"
-            stroke="#00A651"
-            strokeWidth="2"
-            filter="url(#shadow)"
-            opacity="0.8"
-          />
-          
-          {/* Lake Victoria */}
-          <ellipse
-            cx="75"
-            cy="280"
-            rx="22"
-            ry="35"
-            fill="#2563eb"
-            opacity="0.7"
-          />
-          
-          {/* Lake Turkana */}
-          <ellipse
-            cx="150"
-            cy="150"
-            rx="12"
-            ry="40"
-            fill="#2563eb"
-            opacity="0.7"
-          />
-          
-          {/* Key Counties with accurate positioning */}
+          {/* Interactive county markers positioned over the background image */}
+          {/* We'll keep the interactive circles but remove the SVG country outline */}
           
           {/* Nairobi - Central, Capital */}
           <g>
             <circle
-              cx="210"
-              cy="300"
+              cx="200"
+              cy="280"
               r="12"
               fill={getCountyColor('nairobi')}
               stroke={getCountyStroke('nairobi')}
@@ -197,7 +152,7 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
               onClick={(e) => handleCountyClick('nairobi', e)}
               opacity={getCountyOpacity('nairobi')}
             />
-            <text x="210" y="285" textAnchor="middle" className="fill-gray-900 text-sm font-bold pointer-events-none">
+            <text x="200" y="265" textAnchor="middle" className="fill-gray-900 text-sm font-bold pointer-events-none">
               NAIROBI
             </text>
           </g>
@@ -205,8 +160,8 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
           {/* Kiambu - Central */}
           <g>
             <circle
-              cx="195"
-              cy="285"
+              cx="185"
+              cy="265"
               r="8"
               fill={getCountyColor('kiambu')}
               stroke={getCountyStroke('kiambu')}
@@ -217,7 +172,7 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
               onClick={(e) => handleCountyClick('kiambu', e)}
               opacity={getCountyOpacity('kiambu')}
             />
-            <text x="195" y="275" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
+            <text x="185" y="255" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
               Kiambu
             </text>
           </g>
@@ -225,8 +180,8 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
           {/* Mombasa - Coast */}
           <g>
             <circle
-              cx="340"
-              cy="430"
+              cx="320"
+              cy="390"
               r="8"
               fill={getCountyColor('mombasa')}
               stroke={getCountyStroke('mombasa')}
@@ -237,7 +192,7 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
               onClick={(e) => handleCountyClick('mombasa', e)}
               opacity={getCountyOpacity('mombasa')}
             />
-            <text x="340" y="420" textAnchor="middle" className="fill-gray-900 text-xs font-medium pointer-events-none">
+            <text x="320" y="380" textAnchor="middle" className="fill-gray-900 text-xs font-medium pointer-events-none">
               Mombasa
             </text>
           </g>
@@ -245,8 +200,8 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
           {/* Nakuru - Rift Valley */}
           <g>
             <circle
-              cx="170"
-              cy="260"
+              cx="150"
+              cy="230"
               r="8"
               fill={getCountyColor('nakuru')}
               stroke={getCountyStroke('nakuru')}
@@ -257,7 +212,7 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
               onClick={(e) => handleCountyClick('nakuru', e)}
               opacity={getCountyOpacity('nakuru')}
             />
-            <text x="170" y="250" textAnchor="middle" className="fill-gray-900 text-xs font-medium pointer-events-none">
+            <text x="150" y="220" textAnchor="middle" className="fill-gray-900 text-xs font-medium pointer-events-none">
               Nakuru
             </text>
           </g>
@@ -265,8 +220,8 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
           {/* Kitui - Eastern (highlighted for filtering example) */}
           <g>
             <circle
-              cx="270"
-              cy="320"
+              cx="250"
+              cy="300"
               r="7"
               fill={getCountyColor('kitui')}
               stroke={getCountyStroke('kitui')}
@@ -277,7 +232,7 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
               onClick={(e) => handleCountyClick('kitui', e)}
               opacity={getCountyOpacity('kitui')}
             />
-            <text x="270" y="310" textAnchor="middle" className="fill-gray-900 text-xs font-medium pointer-events-none">
+            <text x="250" y="290" textAnchor="middle" className="fill-gray-900 text-xs font-medium pointer-events-none">
               Kitui
             </text>
           </g>
@@ -285,8 +240,8 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
           {/* Machakos - Eastern */}
           <g>
             <circle
-              cx="240"
-              cy="320"
+              cx="220"
+              cy="300"
               r="7"
               fill={getCountyColor('machakos')}
               stroke={getCountyStroke('machakos')}
@@ -297,78 +252,17 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
               onClick={(e) => handleCountyClick('machakos', e)}
               opacity={getCountyOpacity('machakos')}
             />
-            <text x="240" y="310" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
+            <text x="220" y="290" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
               Machakos
             </text>
           </g>
           
-          {/* Kakamega - Western */}
-          <g>
-            <circle
-              cx="110"
-              cy="250"
-              r="7"
-              fill={getCountyColor('kakamega')}
-              stroke={getCountyStroke('kakamega')}
-              strokeWidth={getCountyStrokeWidth('kakamega')}
-              className="cursor-pointer hover:stroke-safaricom-green transition-all"
-              onMouseEnter={(e) => handleMouseEnter('kakamega', e)}
-              onMouseLeave={handleMouseLeave}
-              onClick={(e) => handleCountyClick('kakamega', e)}
-              opacity={getCountyOpacity('kakamega')}
-            />
-            <text x="110" y="240" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
-              Kakamega
-            </text>
-          </g>
-          
-          {/* Kisumu - Nyanza */}
-          <g>
-            <circle
-              cx="90"
-              cy="280"
-              r="7"
-              fill={getCountyColor('kisumu')}
-              stroke={getCountyStroke('kisumu')}
-              strokeWidth={getCountyStrokeWidth('kisumu')}
-              className="cursor-pointer hover:stroke-safaricom-green transition-all"
-              onMouseEnter={(e) => handleMouseEnter('kisumu', e)}
-              onMouseLeave={handleMouseLeave}
-              onClick={(e) => handleCountyClick('kisumu', e)}
-              opacity={getCountyOpacity('kisumu')}
-            />
-            <text x="90" y="270" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
-              Kisumu
-            </text>
-          </g>
-          
-          {/* Eldoret/Uasin Gishu - Rift Valley */}
-          <g>
-            <circle
-              cx="150"
-              cy="220"
-              r="7"
-              fill={getCountyColor('uasin-gishu')}
-              stroke={getCountyStroke('uasin-gishu')}
-              strokeWidth={getCountyStrokeWidth('uasin-gishu')}
-              className="cursor-pointer hover:stroke-safaricom-green transition-all"
-              onMouseEnter={(e) => handleMouseEnter('uasin-gishu', e)}
-              onMouseLeave={handleMouseLeave}
-              onClick={(e) => handleCountyClick('uasin-gishu', e)}
-              opacity={getCountyOpacity('uasin-gishu')}
-            />
-            <text x="150" y="210" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
-              Eldoret
-            </text>
-          </g>
-          
-          {/* Additional key counties */}
           {/* Turkana - North */}
           <g>
             <circle
-              cx="150"
-              cy="120"
-              r="6"
+              cx="80"
+              cy="80"
+              r="8"
               fill={getCountyColor('turkana')}
               stroke={getCountyStroke('turkana')}
               strokeWidth={getCountyStrokeWidth('turkana')}
@@ -378,48 +272,108 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
               onClick={(e) => handleCountyClick('turkana', e)}
               opacity={getCountyOpacity('turkana')}
             />
-            <text x="150" y="110" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
+            <text x="80" y="70" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
               Turkana
             </text>
           </g>
           
-          {/* Garissa - North Eastern */}
+          {/* Marsabit - Eastern/Northern */}
           <g>
             <circle
-              cx="290"
-              cy="250"
-              r="6"
-              fill={getCountyColor('garissa')}
-              stroke={getCountyStroke('garissa')}
-              strokeWidth={getCountyStrokeWidth('garissa')}
+              cx="180"
+              cy="120"
+              r="7"
+              fill={getCountyColor('marsabit')}
+              stroke={getCountyStroke('marsabit')}
+              strokeWidth={getCountyStrokeWidth('marsabit')}
               className="cursor-pointer hover:stroke-safaricom-green transition-all"
-              onMouseEnter={(e) => handleMouseEnter('garissa', e)}
+              onMouseEnter={(e) => handleMouseEnter('marsabit', e)}
               onMouseLeave={handleMouseLeave}
-              onClick={(e) => handleCountyClick('garissa', e)}
-              opacity={getCountyOpacity('garissa')}
+              onClick={(e) => handleCountyClick('marsabit', e)}
+              opacity={getCountyOpacity('marsabit')}
             />
-            <text x="290" y="240" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
-              Garissa
+            <text x="180" y="110" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
+              Marsabit
             </text>
           </g>
           
-          {/* Meru - Eastern */}
+          {/* Mandera - North Eastern */}
           <g>
             <circle
-              cx="260"
-              cy="240"
+              cx="300"
+              cy="80"
               r="7"
-              fill={getCountyColor('meru')}
-              stroke={getCountyStroke('meru')}
-              strokeWidth={getCountyStrokeWidth('meru')}
+              fill={getCountyColor('mandera')}
+              stroke={getCountyStroke('mandera')}
+              strokeWidth={getCountyStrokeWidth('mandera')}
               className="cursor-pointer hover:stroke-safaricom-green transition-all"
-              onMouseEnter={(e) => handleMouseEnter('meru', e)}
+              onMouseEnter={(e) => handleMouseEnter('mandera', e)}
               onMouseLeave={handleMouseLeave}
-              onClick={(e) => handleCountyClick('meru', e)}
-              opacity={getCountyOpacity('meru')}
+              onClick={(e) => handleCountyClick('mandera', e)}
+              opacity={getCountyOpacity('mandera')}
             />
-            <text x="260" y="230" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
-              Meru
+            <text x="300" y="70" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
+              Mandera
+            </text>
+          </g>
+          
+          {/* Wajir - North Eastern */}
+          <g>
+            <circle
+              cx="280"
+              cy="150"
+              r="7"
+              fill={getCountyColor('wajir')}
+              stroke={getCountyStroke('wajir')}
+              strokeWidth={getCountyStrokeWidth('wajir')}
+              className="cursor-pointer hover:stroke-safaricom-green transition-all"
+              onMouseEnter={(e) => handleMouseEnter('wajir', e)}
+              onMouseLeave={handleMouseLeave}
+              onClick={(e) => handleCountyClick('wajir', e)}
+              opacity={getCountyOpacity('wajir')}
+            />
+            <text x="280" y="140" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
+              Wajir
+            </text>
+          </g>
+          
+          {/* Isiolo - Eastern */}
+          <g>
+            <circle
+              cx="220"
+              cy="200"
+              r="6"
+              fill={getCountyColor('isiolo')}
+              stroke={getCountyStroke('isiolo')}
+              strokeWidth={getCountyStrokeWidth('isiolo')}
+              className="cursor-pointer hover:stroke-safaricom-green transition-all"
+              onMouseEnter={(e) => handleMouseEnter('isiolo', e)}
+              onMouseLeave={handleMouseLeave}
+              onClick={(e) => handleCountyClick('isiolo', e)}
+              opacity={getCountyOpacity('isiolo')}
+            />
+            <text x="220" y="190" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
+              Isiolo
+            </text>
+          </g>
+          
+          {/* Samburu - Rift Valley */}
+          <g>
+            <circle
+              cx="160"
+              cy="180"
+              r="6"
+              fill={getCountyColor('samburu')}
+              stroke={getCountyStroke('samburu')}
+              strokeWidth={getCountyStrokeWidth('samburu')}
+              className="cursor-pointer hover:stroke-safaricom-green transition-all"
+              onMouseEnter={(e) => handleMouseEnter('samburu', e)}
+              onMouseLeave={handleMouseLeave}
+              onClick={(e) => handleCountyClick('samburu', e)}
+              opacity={getCountyOpacity('samburu')}
+            />
+            <text x="160" y="170" textAnchor="middle" className="fill-gray-900 text-xs pointer-events-none">
+              Samburu
             </text>
           </g>
           
@@ -459,23 +413,23 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
       {/* Legend */}
       <div className="mt-4 grid grid-cols-2 gap-4">
         <div>
-          <h4 className="text-sm font-medium text-gray-900 mb-2">Population & Performance</h4>
+          <h4 className="text-sm font-medium text-gray-900 mb-2">Interactive Features</h4>
           <div className="space-y-1 text-xs">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-red-600 rounded-full"></div>
-              <span className="text-gray-700">3M+ Population (Metro Areas)</span>
+              <span className="text-gray-700">High Population Counties (3M+)</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-orange-600 rounded-full"></div>
-              <span className="text-gray-700">2-3M Population (Major Cities)</span>
+              <span className="text-gray-700">Major Urban Centers (2-3M)</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3" style={{backgroundColor: '#00A651'}}></div>
-              <span className="text-gray-700">1-2M Population (Large Counties)</span>
+              <span className="text-gray-700">Medium Counties (1-2M)</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-green-700 rounded-full"></div>
-              <span className="text-gray-700">0.5-1M Population (Medium Counties)</span>
+              <span className="text-gray-700">Smaller Counties (0.5-1M)</span>
             </div>
           </div>
         </div>
@@ -484,15 +438,16 @@ const KenyaMap: React.FC<KenyaMapProps> = ({ onCountyClick, selectedCounty }) =>
           <h4 className="text-sm font-medium text-gray-900 mb-2">Map Features</h4>
           <div className="space-y-1 text-xs text-gray-600">
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-2 bg-blue-400 rounded"></div>
-              <span>Lake Victoria & Lake Turkana</span>
+              <div className="w-3 h-2 bg-green-100 border border-safaricom-green rounded"></div>
+              <span>Accurate Kenya boundaries from JPEG</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-2 bg-green-100 border border-safaricom-green rounded"></div>
-              <span>Kenya Country Boundaries</span>
+              <div className="w-3 h-3 rounded-full border-2 border-safaricom-green bg-white"></div>
+              <span>Interactive county markers</span>
             </div>
-            <div>• Hover counties for detailed statistics</div>
-            <div>• Circle size represents county importance</div>
+            <div>• Click counties to filter dashboard data</div>
+            <div>• Hover for detailed statistics</div>
+            <div>• Green theme matches Safaricom branding</div>
           </div>
         </div>
       </div>
