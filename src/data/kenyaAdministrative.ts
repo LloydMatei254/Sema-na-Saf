@@ -96,57 +96,40 @@ export const allDistricts: District[] = [
   { id: 'kasarani', name: 'Kasarani', countyId: 'nairobi', population: 650000 },
   { id: 'embakasi', name: 'Embakasi', countyId: 'nairobi', population: 800000 },
   { id: 'kibra', name: 'Kibra', countyId: 'nairobi', population: 500000 },
-  { id: 'dagoretti', name: 'Dagoretti', countyId: 'nairobi', population: 450000 },
   
   // Mombasa County Districts
   { id: 'mombasa-island', name: 'Mombasa Island', countyId: 'mombasa', population: 200000 },
   { id: 'changamwe', name: 'Changamwe', countyId: 'mombasa', population: 150000 },
-  { id: 'jomba', name: 'Jomba', countyId: 'mombasa', population: 180000 },
   { id: 'kisauni', name: 'Kisauni', countyId: 'mombasa', population: 250000 },
-  { id: 'nyali', name: 'Nyali', countyId: 'mombasa', population: 200000 },
   { id: 'likoni', name: 'Likoni', countyId: 'mombasa', population: 228000 },
   
   // Kiambu County Districts
   { id: 'kiambu-town', name: 'Kiambu Town', countyId: 'kiambu', population: 300000 },
   { id: 'thika', name: 'Thika', countyId: 'kiambu', population: 400000 },
   { id: 'limuru', name: 'Limuru', countyId: 'kiambu', population: 250000 },
-  { id: 'gatundu', name: 'Gatundu', countyId: 'kiambu', population: 200000 },
   { id: 'ruiru', name: 'Ruiru', countyId: 'kiambu', population: 350000 },
+  
+  // Kitui County Districts
+  { id: 'kitui-central', name: 'Kitui Central', countyId: 'kitui', population: 180000 },
+  { id: 'kitui-west', name: 'Kitui West', countyId: 'kitui', population: 150000 },
+  { id: 'kitui-south', name: 'Kitui South', countyId: 'kitui', population: 95000 },
+  { id: 'kitui-east', name: 'Kitui East', countyId: 'kitui', population: 110000 },
+  { id: 'mwingi-north', name: 'Mwingi North', countyId: 'kitui', population: 130000 },
   
   // Nakuru County Districts
   { id: 'nakuru-town', name: 'Nakuru Town', countyId: 'nakuru', population: 400000 },
   { id: 'naivasha', name: 'Naivasha', countyId: 'nakuru', population: 300000 },
   { id: 'gilgil', name: 'Gilgil', countyId: 'nakuru', population: 150000 },
   { id: 'molo', name: 'Molo', countyId: 'nakuru', population: 200000 },
-  { id: 'njoro', name: 'Njoro', countyId: 'nakuru', population: 180000 },
   
   // Machakos County Districts
   { id: 'machakos-town', name: 'Machakos Town', countyId: 'machakos', population: 200000 },
   { id: 'kangundo', name: 'Kangundo', countyId: 'machakos', population: 150000 },
-  { id: 'matungulu', name: 'Matungulu', countyId: 'machakos', population: 180000 },
-  { id: 'kathiani', name: 'Kathiani', countyId: 'machakos', population: 120000 },
   { id: 'mavoko', name: 'Mavoko', countyId: 'machakos', population: 250000 },
-  
-  // Kitui County Districts (Eastern Region)
-  { id: 'kitui-central', name: 'Kitui Central', countyId: 'kitui', population: 180000 },
-  { id: 'kitui-west', name: 'Kitui West', countyId: 'kitui', population: 150000 },
-  { id: 'kitui-rural', name: 'Kitui Rural', countyId: 'kitui', population: 120000 },
-  { id: 'kitui-south', name: 'Kitui South', countyId: 'kitui', population: 95000 },
-  { id: 'kitui-east', name: 'Kitui East', countyId: 'kitui', population: 110000 },
-  { id: 'mwingi-north', name: 'Mwingi North', countyId: 'kitui', population: 130000 },
-  { id: 'mwingi-west', name: 'Mwingi West', countyId: 'kitui', population: 125000 },
-  { id: 'mwingi-central', name: 'Mwingi Central', countyId: 'kitui', population: 140000 },
-  
-  // Kakamega County Districts
-  { id: 'kakamega-central', name: 'Kakamega Central', countyId: 'kakamega', population: 300000 },
-  { id: 'butere', name: 'Butere', countyId: 'kakamega', population: 200000 },
-  { id: 'mumias', name: 'Mumias', countyId: 'kakamega', population: 250000 },
-  { id: 'lugari', name: 'Lugari', countyId: 'kakamega', population: 180000 },
-
-  // Add more districts for other counties as needed...
+  { id: 'yatta', name: 'Yatta', countyId: 'machakos', population: 160000 }
 ]
 
-// Comprehensive Divisions including Kitui South
+// Comprehensive Divisions
 export const allDivisions: Division[] = [
   // Kitui South District Divisions
   { id: 'kitui-south-central', name: 'Kitui South Central', districtId: 'kitui-south', population: 25000 },
@@ -161,6 +144,7 @@ export const allDivisions: Division[] = [
   { id: 'kyuso', name: 'Kyuso', districtId: 'kitui-central', population: 30000 },
   { id: 'kisasi', name: 'Kisasi', districtId: 'kitui-central', population: 25000 },
   { id: 'lower-yatta', name: 'Lower Yatta', districtId: 'kitui-central', population: 45000 },
+  
   // Nairobi Central District Divisions
   { id: 'central-business-district', name: 'Central Business District', districtId: 'nairobi-central', population: 50000 },
   { id: 'ngara', name: 'Ngara', districtId: 'nairobi-central', population: 80000 },
@@ -198,9 +182,7 @@ export const allDivisions: Division[] = [
   
   // Kisauni District Divisions
   { id: 'kisauni-division', name: 'Kisauni', districtId: 'kisauni', population: 125000 },
-  { id: 'mjambere', name: 'Mjambere', districtId: 'kisauni', population: 125000 },
-  
-  // Add more divisions as needed...
+  { id: 'mjambere', name: 'Mjambere', districtId: 'kisauni', population: 125000 }
 ]
 
 // Filter options for the dashboard
