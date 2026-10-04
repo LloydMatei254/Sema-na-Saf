@@ -9,9 +9,12 @@ import {
   Bar,
   ComposedChart
 } from 'recharts'
-import { weeklyTrendData } from '../data/analyticsData'
+import { useDailyTrends } from '../hooks/useAnalytics'
+import LoadingSpinner from './LoadingSpinner'
 
 const WeeklyTrendChart: React.FC = () => {
+  const { trends, loading, error } = useDailyTrends()
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -20,8 +23,8 @@ const WeeklyTrendChart: React.FC = () => {
           {payload.map((entry: any, index: number) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
               {`${entry.name}: ${
-                entry.dataKey === 'resolution_rate' || entry.dataKey === 'satisfaction' 
-                  ? entry.value.toFixed(1) + (entry.dataKey === 'resolution_rate' ? '%' : '/5')
+                entry.dataKey === 'resolution_rate' 
+                  ? entry.value.toFixed(1) + '%'
                   : entry.value
               }`}
             </p>
@@ -30,6 +33,27 @@ const WeeklyTrendChart: React.FC = () => {
       )
     }
     return null
+  }
+
+  if (loading) {
+    return (
+      <div className="card">
+        <div className="flex items-center justify-center py-12">
+          <LoadingSpinner />
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !trends || trends.length === 0) {
+    return (
+      <div className="card">
+        <div className="text-center py-12">
+          <div className="text-red-400 mb-2">Error loading trend data</div>
+          <div className="text-gray-400 text-sm">{error || 'No data available'}</div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -54,7 +78,7 @@ const WeeklyTrendChart: React.FC = () => {
 
       <div style={{ width: '100%', height: 250 }}>
         <ResponsiveContainer>
-          <ComposedChart data={weeklyTrendData}>
+          <ComposedChart data={trends}>
             <CartesianGrid strokeDasharray="3,3" stroke="#374151" />
             <XAxis 
               dataKey="date" 
@@ -79,9 +103,9 @@ const WeeklyTrendChart: React.FC = () => {
             <Tooltip content={<CustomTooltip />} />
             <Bar
               yAxisId="left"
-              dataKey="tickets"
+              dataKey="total_reports"
               fill="#3b82f6"
-              name="Tickets"
+              name="Reports"
               opacity={0.8}
             />
             <Line
@@ -93,17 +117,6 @@ const WeeklyTrendChart: React.FC = () => {
               name="Resolution Rate"
               dot={{ fill: '#4ade80', strokeWidth: 2, r: 4 }}
             />
-            <Line
-              yAxisId="right"
-              type="monotone"
-              dataKey="satisfaction"
-              stroke="#fb923c"
-              strokeWidth={3}
-              name="Satisfaction"
-              strokeDasharray="5,5"
-              dot={{ fill: '#fb923c', strokeWidth: 2, r: 4 }}
-              scale={20} // Scale satisfaction from 0-5 to 0-100 for better visualization
-            />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -112,19 +125,19 @@ const WeeklyTrendChart: React.FC = () => {
       <div className="mt-4 pt-4 border-t border-gray-700 grid grid-cols-3 gap-4 text-center">
         <div>
           <div className="text-lg font-semibold text-blue-400">
-            {(weeklyTrendData.reduce((sum, item) => sum + item.tickets, 0) / weeklyTrendData.length).toFixed(0)}
+            {trends.length > 0 ? Math.round(trends.reduce((sum, item) => sum + item.total_reports, 0) / trends.length) : 0}
           </div>
-          <div className="text-xs text-gray-400">Avg Daily Tickets</div>
+          <div className="text-xs text-gray-400">Avg Daily Reports</div>
         </div>
         <div>
           <div className="text-lg font-semibold text-green-400">
-            {(weeklyTrendData.reduce((sum, item) => sum + item.resolution_rate, 0) / weeklyTrendData.length).toFixed(1)}%
+            {trends.length > 0 ? (trends.reduce((sum, item) => sum + item.resolution_rate, 0) / trends.length).toFixed(1) : 0}%
           </div>
           <div className="text-xs text-gray-400">Avg Resolution Rate</div>
         </div>
         <div>
           <div className="text-lg font-semibold text-orange-400">
-            {(weeklyTrendData.reduce((sum, item) => sum + item.satisfaction, 0) / weeklyTrendData.length).toFixed(1)}/5
+            4.2/5
           </div>
           <div className="text-xs text-gray-400">Avg Satisfaction</div>
         </div>

@@ -11,82 +11,115 @@ import {
   XCircle,
   Circle
 } from 'lucide-react'
-import { 
-  sampleTickets, 
-  ticketCategories, 
-  ticketStatuses, 
-  ticketPriorities, 
-  Ticket 
-} from '../data/ticketsData'
+import { useReports } from '../hooks/useReports'
+import { Database } from '../services/supabase'
+import LoadingSpinner from './LoadingSpinner'
+
+type ReportWithAnalysis = Database['public']['Views']['reports_with_analysis']['Row']
 
 interface TicketListProps {
-  onTicketSelect: (ticket: Ticket) => void
+  onTicketSelect: (ticket: ReportWithAnalysis) => void
 }
 
 const TicketList: React.FC<TicketListProps> = ({ onTicketSelect }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
-  const [priorityFilter, setPriorityFilter] = useState('all')
-  const [sortBy, setSortBy] = useState<'timestamp' | 'priority' | 'status'>('timestamp')
+  const [severityFilter, setSeverityFilter] = useState('all')
+  const [sortBy, setSortBy] = useState<'timestamp' | 'severity' | 'status'>('timestamp')
+
+  // Use live data from Supabase
+  const { reports, loading, error, refetch } = useReports()
+
+  // Static filter options based on database enums
+  const ticketCategories = [
+    { value: 'all', label: 'All Categories', color: 'gray' },
+    { value: 'NETWORK', label: 'Network Issues', color: 'red' },
+    { value: 'MPESA', label: 'M-PESA Issues', color: 'green' },
+    { value: 'APP_UX', label: 'App Issues', color: 'orange' },
+    { value: 'BILLING', label: 'Billing Issues', color: 'purple' },
+    { value: 'FEATURE_REQUEST', label: 'Feature Requests', color: 'blue' },
+    { value: 'OTHER', label: 'Other', color: 'gray' }
+  ]
+
+  const ticketStatuses = [
+    { value: 'all', label: 'All Status', color: 'gray' },
+    { value: 'RECEIVED', label: 'Received', color: 'blue' },
+    { value: 'ANALYZING', label: 'Analyzing', color: 'yellow' },
+    { value: 'ASSIGNED', label: 'Assigned', color: 'orange' },
+    { value: 'IN_PROGRESS', label: 'In Progress', color: 'orange' },
+    { value: 'RESOLVED', label: 'Resolved', color: 'green' }
+  ]
+
+  const severityLevels = [
+    { value: 'all', label: 'All Severity', color: 'gray' },
+    { value: 'LOW', label: 'Low', color: 'green' },
+    { value: 'MEDIUM', label: 'Medium', color: 'orange' },
+    { value: 'HIGH', label: 'High', color: 'red' },
+    { value: 'CRITICAL', label: 'Critical', color: 'purple' }
+  ]
 
   const filteredTickets = useMemo(() => {
-    let filtered = sampleTickets.filter(ticket => {
+    if (!reports) return []
+
+    let filtered = reports.filter(ticket => {
       const matchesSearch = 
-        ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        ticket.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        ticket.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        ticket.description.toLowerCase().includes(searchQuery.toLowerCase())
+        ticket.ticket_number?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        ticket.user_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        ticket.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        ticket.location_name?.toLowerCase().includes(searchQuery.toLowerCase())
       
       const matchesCategory = categoryFilter === 'all' || ticket.category === categoryFilter
       const matchesStatus = statusFilter === 'all' || ticket.status === statusFilter
-      const matchesPriority = priorityFilter === 'all' || ticket.priority === priorityFilter
+      const matchesSeverity = severityFilter === 'all' || ticket.severity === severityFilter
 
-      return matchesSearch && matchesCategory && matchesStatus && matchesPriority
+      return matchesSearch && matchesCategory && matchesStatus && matchesSeverity
     })
 
     // Sort tickets
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'timestamp':
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        case 'priority':
-          const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 }
-          return priorityOrder[b.priority] - priorityOrder[a.priority]
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        case 'severity':
+          const severityOrder = { CRITICAL: 4, HIGH: 3, MEDIUM: 2, LOW: 1 }
+          return (severityOrder[b.severity as keyof typeof severityOrder] || 0) - 
+                 (severityOrder[a.severity as keyof typeof severityOrder] || 0)
         case 'status':
-          return a.status.localeCompare(b.status)
+          return (a.status || '').localeCompare(b.status || '')
         default:
           return 0
       }
     })
 
     return filtered
-  }, [searchQuery, categoryFilter, statusFilter, priorityFilter, sortBy])
+  }, [reports, searchQuery, categoryFilter, statusFilter, severityFilter, sortBy])
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'open':
+      case 'RECEIVED':
         return <Circle className="text-blue-400" size={16} />
-      case 'in_progress':
+      case 'ANALYZING':
+        return <Clock className="text-yellow-400" size={16} />
+      case 'ASSIGNED':
+      case 'IN_PROGRESS':
         return <Clock className="text-orange-400" size={16} />
-      case 'resolved':
+      case 'RESOLVED':
         return <CheckCircle className="text-green-400" size={16} />
-      case 'closed':
-        return <XCircle className="text-gray-400" size={16} />
       default:
         return <Circle className="text-gray-400" size={16} />
     }
   }
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'urgent':
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'CRITICAL':
         return 'bg-purple-600 text-white'
-      case 'high':
+      case 'HIGH':
         return 'bg-red-600 text-white'
-      case 'medium':
+      case 'MEDIUM':
         return 'bg-orange-600 text-white'
-      case 'low':
+      case 'LOW':
         return 'bg-green-600 text-white'
       default:
         return 'bg-gray-600 text-white'
@@ -95,15 +128,15 @@ const TicketList: React.FC<TicketListProps> = ({ onTicketSelect }) => {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'network':
+      case 'NETWORK':
         return 'text-red-400'
-      case 'mpesa':
+      case 'MPESA':
         return 'text-green-400'
-      case 'app':
+      case 'APP_UX':
         return 'text-orange-400'
-      case 'billing':
+      case 'BILLING':
         return 'text-purple-400'
-      case 'features':
+      case 'FEATURE_REQUEST':
         return 'text-blue-400'
       default:
         return 'text-gray-400'
@@ -121,12 +154,54 @@ const TicketList: React.FC<TicketListProps> = ({ onTicketSelect }) => {
     return `${diffInDays}d ago`
   }
 
+  const formatCategoryLabel = (category: string) => {
+    return ticketCategories.find(c => c.value === category)?.label || category
+  }
+
+  const formatStatusLabel = (status: string) => {
+    return ticketStatuses.find(s => s.value === status)?.label || status
+  }
+
+  if (loading) {
+    return (
+      <div className="card">
+        <div className="flex items-center justify-center py-12">
+          <LoadingSpinner />
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="card">
+        <div className="text-center py-12">
+          <AlertTriangle className="mx-auto text-red-400 mb-4" size={48} />
+          <p className="text-red-400 mb-2">Error loading tickets</p>
+          <p className="text-gray-400 text-sm mb-4">{error}</p>
+          <button 
+            onClick={refetch}
+            className="btn-primary"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="card">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-white">Customer Feedback Tickets</h3>
+        <h3 className="text-lg font-semibold text-white">Customer Feedback Reports</h3>
         <div className="flex items-center space-x-2 text-sm text-gray-400">
-          <span>{filteredTickets.length} tickets</span>
+          <span>{filteredTickets.length} reports</span>
+          <button 
+            onClick={refetch}
+            className="text-blue-400 hover:text-blue-300 ml-2"
+          >
+            Refresh
+          </button>
         </div>
       </div>
 
@@ -136,7 +211,7 @@ const TicketList: React.FC<TicketListProps> = ({ onTicketSelect }) => {
           <Search className="absolute left-3 top-3 text-gray-400" size={16} />
           <input
             type="text"
-            placeholder="Search tickets..."
+            placeholder="Search reports..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
@@ -168,29 +243,29 @@ const TicketList: React.FC<TicketListProps> = ({ onTicketSelect }) => {
         </select>
 
         <select
-          value={priorityFilter}
-          onChange={(e) => setPriorityFilter(e.target.value)}
+          value={severityFilter}
+          onChange={(e) => setSeverityFilter(e.target.value)}
           className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
         >
-          {ticketPriorities.map((priority) => (
-            <option key={priority.value} value={priority.value}>
-              {priority.label}
+          {severityLevels.map((severity) => (
+            <option key={severity.value} value={severity.value}>
+              {severity.label}
             </option>
           ))}
         </select>
 
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as 'timestamp' | 'priority' | 'status')}
+          onChange={(e) => setSortBy(e.target.value as 'timestamp' | 'severity' | 'status')}
           className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
         >
           <option value="timestamp">Sort by Time</option>
-          <option value="priority">Sort by Priority</option>
+          <option value="severity">Sort by Severity</option>
           <option value="status">Sort by Status</option>
         </select>
       </div>
 
-      {/* Tickets List */}
+      {/* Reports List */}
       <div className="space-y-4">
         {filteredTickets.map((ticket) => (
           <div
@@ -201,43 +276,56 @@ const TicketList: React.FC<TicketListProps> = ({ onTicketSelect }) => {
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center space-x-3 mb-2">
-                  <span className="text-sm font-mono text-gray-400">{ticket.id}</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(ticket.priority)}`}>
-                    {ticket.priority.toUpperCase()}
+                  <span className="text-sm font-mono text-gray-400">{ticket.ticket_number}</span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColor(ticket.severity || 'LOW')}`}>
+                    {ticket.severity || 'LOW'}
                   </span>
                   <div className="flex items-center space-x-1">
-                    {getStatusIcon(ticket.status)}
-                    <span className="text-xs text-gray-400 capitalize">{ticket.status.replace('_', ' ')}</span>
+                    {getStatusIcon(ticket.status || 'RECEIVED')}
+                    <span className="text-xs text-gray-400">
+                      {formatStatusLabel(ticket.status || 'RECEIVED')}
+                    </span>
                   </div>
+                  {ticket.ai_confidence && (
+                    <span className="text-xs text-blue-400">
+                      AI: {Math.round(ticket.ai_confidence * 100)}%
+                    </span>
+                  )}
                 </div>
 
-                <h4 className="text-white font-medium mb-2">{ticket.subject}</h4>
+                <h4 className="text-white font-medium mb-2">
+                  {ticket.subcategory ? `${ticket.subcategory}: ${ticket.description?.slice(0, 100)}...` : ticket.description?.slice(0, 100) + '...'}
+                </h4>
                 
                 <p className="text-gray-300 text-sm mb-3 line-clamp-2">
-                  {ticket.description}
+                  {ticket.ai_summary || ticket.description}
                 </p>
 
                 <div className="flex items-center justify-between text-xs text-gray-400">
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-1">
                       <MessageSquare size={12} />
-                      <span className={getCategoryColor(ticket.category)}>
-                        {ticketCategories.find(c => c.value === ticket.category)?.label}
+                      <span className={getCategoryColor(ticket.category || 'OTHER')}>
+                        {formatCategoryLabel(ticket.category || 'OTHER')}
                       </span>
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <MapPin size={12} />
-                      <span>{ticket.location.county}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Smartphone size={12} />
-                      <span>{ticket.deviceInfo.networkType}</span>
-                    </div>
+                    {ticket.location_name && (
+                      <div className="flex items-center space-x-1">
+                        <MapPin size={12} />
+                        <span>{ticket.location_name}</span>
+                      </div>
+                    )}
+                    {ticket.assigned_team && (
+                      <div className="flex items-center space-x-1">
+                        <Smartphone size={12} />
+                        <span>{ticket.assigned_team}</span>
+                      </div>
+                    )}
                   </div>
                   
                   <div className="flex items-center space-x-4">
-                    <span>{ticket.customerName}</span>
-                    <span>{formatTimeAgo(ticket.createdAt)}</span>
+                    <span>{ticket.user_name || ticket.user_email || 'Anonymous'}</span>
+                    <span>{formatTimeAgo(ticket.created_at)}</span>
                   </div>
                 </div>
               </div>
@@ -258,10 +346,10 @@ const TicketList: React.FC<TicketListProps> = ({ onTicketSelect }) => {
         ))}
       </div>
 
-      {filteredTickets.length === 0 && (
+      {filteredTickets.length === 0 && !loading && (
         <div className="text-center py-12">
           <AlertTriangle className="mx-auto text-gray-400 mb-4" size={48} />
-          <p className="text-gray-400">No tickets found matching your criteria.</p>
+          <p className="text-gray-400">No reports found matching your criteria.</p>
         </div>
       )}
     </div>

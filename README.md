@@ -1,109 +1,143 @@
-# Sema Dashboard
+# SEMA - Voice of the Customer
 
-A customer feedback management dashboard for Safaricom, built for tracking and managing Sema feedback requests across Kenya's administrative divisions.
+A modern customer feedback platform for Safaricom Kenya, built with React, TypeScript, and Supabase. This application demonstrates an AI-powered customer support system with real-time analytics and intelligent report routing.
 
-## Features
+## 🚀 Features
 
-- 📊 **Real-time Metrics**: Track tickets, resolution rates, and user engagement
-- 🗺️ **Interactive Kenya Map**: Visualize performance data across all 47 counties
-- 🏛️ **Complete Administrative Structure**: Filter by all counties, districts, and divisions in Kenya
-- 🎨 **Safaricom Branding**: White/green theme matching Safaricom brand guidelines
-- 📱 **Responsive Design**: Works on desktop, tablet, and mobile devices
-- 🎫 **Ticket Management**: Track and manage customer feedback submissions
-- 📈 **Analytics Dashboard**: Comprehensive charts and performance metrics
+### Customer Features
+- **Multi-modal Report Submission**: Text and voice-based complaint submission
+- **Real-time Location Detection**: Automatic location capture for better context
+- **AI-Powered Categorization**: Intelligent classification and routing of reports
+- **Real-time Updates**: Live status updates and notifications
+- **Mobile-Friendly Interface**: Responsive design for all devices
 
-## Tech Stack
+### Admin Features  
+- **Comprehensive Dashboard**: Real-time analytics and metrics
+- **Interactive Maps**: Geographic distribution of reports
+- **AI Analysis Integration**: Automated report categorization and severity assessment
+- **Team Management**: Intelligent routing to appropriate support teams
+- **Performance Analytics**: Resolution time tracking and team performance metrics
 
-- **React 18** with TypeScript
-- **Vite** for fast development and builds
-- **Tailwind CSS** for styling
-- **Recharts** for data visualization
-- **React Router** for navigation
-- **Lucide React** for icons
+### Technical Features
+- **Real-time Database**: Supabase PostgreSQL with real-time subscriptions
+- **AI Integration**: OpenAI GPT-4 for intelligent report analysis
+- **Row Level Security**: Comprehensive data protection policies
+- **Edge Functions**: Server-side processing for secure operations
+- **Audit Logging**: Complete activity tracking for compliance
 
-## Getting Started
+## 🏗️ Architecture
 
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
+```
+Frontend (React/TypeScript)
+↓
+Supabase Auth
+↓
+Supabase Database (PostgreSQL)
+↓
+Edge Functions (Deno)
+↓
+AI Analysis (OpenAI GPT-4)
+↓
+Real-time Updates
+↓
+Admin Dashboard
+```
 
-### Installation
+## 🔧 Technology Stack
 
-1. Clone the repository:
+- **Frontend**: React 18, TypeScript, Vite, TailwindCSS
+- **Backend**: Supabase (PostgreSQL, Auth, Storage, Edge Functions)
+- **AI**: OpenAI GPT-4 Turbo
+- **Charts**: Recharts
+- **Icons**: Lucide React
+- **Deployment**: Vercel
+
+## 📋 Prerequisites
+
+- Node.js 18+ and npm
+- Supabase account
+- OpenAI API key
+- Git
+
+## 🚀 Quick Start
+
+### 1. Clone Repository
 ```bash
 git clone https://github.com/LloydMatei254/Sema-na-Saf.git
 cd Sema-na-Saf
-```
-
-2. Install dependencies:
-```bash
 npm install
 ```
 
-3. Start development server:
+### 2. Environment Setup
+Copy `.env.example` to `.env.local` and configure:
+```env
+VITE_SUPABASE_URL=https://kysiymdpsvluylpnjtab.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+### 3. Database Setup
+See [BACKEND_SETUP.md](./BACKEND_SETUP.md) for detailed Supabase configuration.
+
+### 4. Start Development Server
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
+Visit `http://localhost:5173` to view the application.
 
-### Build for Production
+## 🎭 Demo Accounts
 
+### Admin Access
+- Email: `admin@safaricom.co.ke`
+- Password: `admin123`
+
+### Customer Access  
+- Email: `user@example.com`
+- Password: `user123`
+
+## 📊 Demo Flow
+
+### Customer Journey
+1. **Access Platform**: Visit the public landing page
+2. **Authentication**: Sign up or log in as a customer
+3. **Submit Report**: Choose text or voice input
+4. **AI Processing**: System analyzes and categorizes the report
+5. **Team Routing**: Report automatically assigned to relevant team
+6. **Track Progress**: Real-time updates on resolution status
+
+### Admin Journey
+1. **Admin Login**: Access with admin credentials
+2. **Dashboard Overview**: View real-time metrics and analytics  
+3. **Report Management**: Review and manage customer reports
+4. **AI Insights**: View AI analysis and recommendations
+5. **Team Performance**: Monitor resolution times and team efficiency
+6. **Geographic Analysis**: Identify issue clusters on interactive maps
+
+## 🚀 Deployment
+
+### Vercel (Current)
+The app is deployed at: **[sema-na-saf.vercel.app](https://sema-na-saf.vercel.app)**
+
+### Local Development
 ```bash
-npm run build
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run preview  # Preview production build
 ```
 
-The built files will be in the `dist` directory.
+## 🔐 Getting Started
 
-## Deployment
+1. **Visit**: [sema-na-saf.vercel.app](https://sema-na-saf.vercel.app)
+2. **Experience Sema**: Click to access the customer interface
+3. **Try Admin Dashboard**: Login with admin credentials
+4. **Submit a Report**: Test the complete AI-powered workflow
 
-### Vercel (Recommended)
+For full backend setup with Supabase, see [BACKEND_SETUP.md](./BACKEND_SETUP.md)
 
-1. Push your code to GitHub
-2. Connect your GitHub repository to Vercel
-3. Vercel will automatically detect the Vite configuration and deploy
+---
 
-### Manual Deployment
+**Built with ❤️ for the Safaricom Hackathon**
 
-1. Build the project: `npm run build`
-2. Deploy the `dist` directory to your hosting service
-
-## Project Structure
-
-```
-src/
-├── components/          # Reusable React components
-│   ├── KenyaMap.tsx    # Interactive Kenya counties map
-│   ├── FilterBar.tsx   # Administrative filtering controls
-│   ├── MetricsCard.tsx # Dashboard metrics display
-│   └── ...
-├── data/               # Data and configuration files
-│   ├── kenyaAdministrative.ts  # Complete Kenya admin structure
-│   ├── kenyaCountiesData.ts    # Counties performance data
-│   └── ...
-├── pages/              # Main page components
-│   └── Dashboard.tsx   # Main dashboard page
-└── ...
-```
-
-## Data Sources
-
-- **Administrative Data**: Complete structure of Kenya's 47 counties, districts, and divisions
-- **Performance Metrics**: Simulated data for demonstration purposes
-- **Geographic Data**: County positioning and population data
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License.
-
-## Support
-
-For questions or issues, please contact the development team or create an issue in the GitHub repository.
+Demonstrating the power of AI-driven customer support and real-time analytics for better service delivery across Kenya.

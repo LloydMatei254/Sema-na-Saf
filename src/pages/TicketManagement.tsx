@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
 import TicketList from '../components/TicketList'
 import TicketDetail from '../components/TicketDetail'
-import { Ticket } from '../data/ticketsData'
+import { Database } from '../services/supabase'
+
+type ReportWithAnalysis = Database['public']['Views']['reports_with_analysis']['Row']
 
 const TicketManagement: React.FC = () => {
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
+  const [selectedTicket, setSelectedTicket] = useState<ReportWithAnalysis | null>(null)
 
-  const handleTicketSelect = (ticket: Ticket) => {
+  const handleTicketSelect = (ticket: ReportWithAnalysis) => {
     setSelectedTicket(ticket)
   }
 
-  const handleTicketUpdate = (updatedTicket: Ticket) => {
-    // In a real app, this would update the backend and refresh the list
+  const handleTicketUpdate = (updatedTicket: ReportWithAnalysis) => {
+    // Update handled by the component internally via Supabase
     console.log('Ticket updated:', updatedTicket)
     setSelectedTicket(null)
   }

@@ -8,9 +8,12 @@ import {
   Area,
   AreaChart
 } from 'recharts'
-import { hourlyTicketData } from '../data/analyticsData'
+import { useHourlyData } from '../hooks/useAnalytics'
+import LoadingSpinner from './LoadingSpinner'
 
 const HourlyTicketChart: React.FC = () => {
+  const { hourlyData, loading, error } = useHourlyData()
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -25,6 +28,27 @@ const HourlyTicketChart: React.FC = () => {
       )
     }
     return null
+  }
+
+  if (loading) {
+    return (
+      <div className="card">
+        <div className="flex items-center justify-center py-12">
+          <LoadingSpinner />
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !hourlyData) {
+    return (
+      <div className="card">
+        <div className="text-center py-12">
+          <div className="text-red-400 mb-2">Error loading hourly data</div>
+          <div className="text-gray-400 text-sm">{error || 'No data available'}</div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -45,7 +69,7 @@ const HourlyTicketChart: React.FC = () => {
 
       <div style={{ width: '100%', height: 200 }}>
         <ResponsiveContainer>
-          <AreaChart data={hourlyTicketData}>
+          <AreaChart data={hourlyData}>
             <CartesianGrid strokeDasharray="3,3" stroke="#374151" />
             <XAxis 
               dataKey="hour" 
@@ -85,19 +109,19 @@ const HourlyTicketChart: React.FC = () => {
       <div className="mt-4 pt-4 border-t border-gray-700 grid grid-cols-3 gap-4 text-center">
         <div>
           <div className="text-lg font-semibold text-orange-400">
-            {hourlyTicketData.reduce((sum, item) => sum + item.tickets, 0)}
+            {hourlyData.reduce((sum, item) => sum + item.tickets, 0)}
           </div>
           <div className="text-xs text-gray-400">Today's Total</div>
         </div>
         <div>
           <div className="text-lg font-semibold text-green-400">
-            {hourlyTicketData.reduce((sum, item) => sum + item.resolved, 0)}
+            {hourlyData.reduce((sum, item) => sum + item.resolved, 0)}
           </div>
           <div className="text-xs text-gray-400">Resolved Today</div>
         </div>
         <div>
           <div className="text-lg font-semibold text-blue-400">
-            {Math.max(...hourlyTicketData.map(item => item.tickets))}
+            {Math.max(...hourlyData.map(item => item.tickets))}
           </div>
           <div className="text-xs text-gray-400">Peak Hour</div>
         </div>

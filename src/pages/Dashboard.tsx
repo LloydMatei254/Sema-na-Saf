@@ -17,13 +17,17 @@ import Settings from './Settings'
 import Analytics from './Analytics'
 import Locations from './Locations'
 import Gaps from './Gaps'
-import { metricsData } from '../data/metricsData'
 import { FilterProvider, useFilter } from '../contexts/FilterContext'
+import { usePerformanceMetrics } from '../hooks/useAnalytics'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 const DashboardContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { selectedCounty, setSelectedCounty } = useFilter()
+  
+  // Use live data from Supabase
+  const { metrics, loading: metricsLoading, error: metricsError } = usePerformanceMetrics()
 
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -35,6 +39,90 @@ const DashboardContent: React.FC = () => {
 
   const handleCountyClick = (countyId: string) => {
     setSelectedCounty(countyId)
+  }
+
+  // Format numbers for display
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`
+    return num.toString()
+  }
+
+  // Format time in hours to readable format
+  const formatResolutionTime = (hours: number): string => {
+    if (hours < 1) return `${Math.round(hours * 60)}min`
+    if (hours < 24) return `${hours.toFixed(1)}hrs`
+    return `${(hours / 24).toFixed(1)}days`
+  }
+
+  // Generate live metrics data based on Supabase data
+  const getLiveMetricsData = () => {
+    if (!metrics) return []
+
+    const population = 54000000 // Kenya population estimate
+    const resolutionRate = metrics.resolutionRate || 0
+    
+    return [
+      {
+        title: 'TOTAL POPULATION',
+        value: '54.0M',
+        subtitle: 'citizens across Kenya',
+        color: 'blue' as const,
+        trend: 'up' as const,
+        trendValue: '+2.3%'
+      },
+      {
+        title: 'ACTIVE COMPLAINTS',
+        value: formatNumber(metrics.openReports || 0),
+        subtitle: 'pending resolution',
+        color: metrics.openReports > 100 ? 'red' as const : 'orange' as const,
+        trend: 'neutral' as const,
+        trendValue: undefined
+      },
+      {
+        title: 'REPORTS SUBMITTED',
+        value: formatNumber(metrics.reportsToday || 0),
+        subtitle: 'received today',
+        color: 'gray' as const,
+        trend: metrics.reportsToday > 10 ? 'up' as const : 'down' as const,
+        trendValue: metrics.reportsToday > 0 ? `+${metrics.reportsToday}` : '0'
+      },
+      {
+        title: 'RESOLUTION RATE',
+        value: `${resolutionRate.toFixed(1)}%`,
+        subtitle: 'this month',
+        color: resolutionRate > 80 ? 'green' as const : resolutionRate > 60 ? 'orange' as const : 'red' as const,
+        trend: resolutionRate > 80 ? 'up' as const : 'down' as const,
+        trendValue: resolutionRate > 0 ? `${resolutionRate > 80 ? '+' : ''}${(resolutionRate - 75).toFixed(1)}%` : '0%'
+      },
+      {
+        title: 'SERVICE QUALITY',
+        value: '4.2',
+        subtitle: 'average rating',
+        color: 'green' as const,
+        trend: 'up' as const,
+        trendValue: '+0.3'
+      },
+      {
+        title: 'RESOLVED REPORTS',
+        value: formatNumber(metrics.resolvedReports || 0),
+        subtitle: 'completed total',
+        color: 'green' as const,
+        trend: 'up' as const,
+        trendValue: `+${formatNumber(metrics.resolvedReports || 0)}`
+      }
+    ]
+  }
+
+  if (metricsError) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 mb-2">Error loading dashboard data</div>
+          <div className="text-gray-500 text-sm">{metricsError}</div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -53,65 +141,73 @@ const DashboardContent: React.FC = () => {
           {/* Dashboard Content */}
           {activeTab === 'dashboard' && (
             <div className="space-y-4 sm:space-y-6 fade-in">
-              {/* Primary Metrics Cards Section */}
-              <div className="grid-responsive-6 gap-3 sm:gap-4">
-                {metricsData.map((metric, index) => (
-                  <div key={index} className="slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                    <MetricsCard
-                      title={metric.title}
-                      value={metric.value}
-                      subtitle={metric.subtitle}
-                      trend={metric.trend}
-                      trendValue={metric.trendValue}
-                      color={metric.color}
-                    />
+              {metricsLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <LoadingSpinner />
+                </div>
+              ) : (
+                <>
+                  {/* Primary Metrics Cards Section */}
+                  <div className="grid-responsive-6 gap-3 sm:gap-4">
+                    {getLiveMetricsData().map((metric, index) => (
+                      <div key={index} className="slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                        <MetricsCard
+                          title={metric.title}
+                          value={metric.value}
+                          subtitle={metric.subtitle}
+                          trend={metric.trend}
+                          trendValue={metric.trendValue}
+                          color={metric.color}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              {/* Sema-Specific Metrics */}
-              <div className="slide-up" style={{ animationDelay: '0.6s' }}>
-                <SemaMetrics />
-              </div>
-              
-              {/* Main Content Grid */}
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
-                {/* Performance Table */}
-                <div className="xl:col-span-2 slide-up" style={{ animationDelay: '0.7s' }}>
-                  <PerformanceTable />
-                </div>
-                
-                {/* Map and Charts */}
-                <div className="space-y-4 sm:space-y-6">
-                  <div className="slide-up" style={{ animationDelay: '0.8s' }}>
-                    <KenyaMap 
-                      onCountyClick={handleCountyClick}
-                      selectedCounty={selectedCounty !== 'all' ? selectedCounty : null}
-                    />
+                  {/* Sema-Specific Metrics */}
+                  <div className="slide-up" style={{ animationDelay: '0.6s' }}>
+                    <SemaMetrics />
                   </div>
                   
-                  <div className="slide-up" style={{ animationDelay: '0.9s' }}>
-                    <HourlyTicketChart />
+                  {/* Main Content Grid */}
+                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
+                    {/* Performance Table */}
+                    <div className="xl:col-span-2 slide-up" style={{ animationDelay: '0.7s' }}>
+                      <PerformanceTable />
+                    </div>
+                    
+                    {/* Map and Charts */}
+                    <div className="space-y-4 sm:space-y-6">
+                      <div className="slide-up" style={{ animationDelay: '0.8s' }}>
+                        <KenyaMap 
+                          onCountyClick={handleCountyClick}
+                          selectedCounty={selectedCounty !== 'all' ? selectedCounty : null}
+                        />
+                      </div>
+                      
+                      <div className="slide-up" style={{ animationDelay: '0.9s' }}>
+                        <HourlyTicketChart />
+                      </div>
+                      
+                      <div className="slide-up" style={{ animationDelay: '1.0s' }}>
+                        <FeedbackSummary />
+                      </div>
+                    </div>
                   </div>
                   
-                  <div className="slide-up" style={{ animationDelay: '1.0s' }}>
-                    <FeedbackSummary />
+                  {/* Analytics Section */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 mt-6">
+                    <div className="slide-up" style={{ animationDelay: '1.1s' }}>
+                      <WeeklyTrendChart />
+                    </div>
+                    <div className="slide-up" style={{ animationDelay: '1.2s' }}>
+                      <CategoryTrendChart />
+                    </div>
+                    <div className="slide-up" style={{ animationDelay: '1.3s' }}>
+                      <ResolutionTimeChart />
+                    </div>
                   </div>
-                </div>
-              </div>
-              
-              {/* Analytics Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 mt-6">
-                <div className="slide-up" style={{ animationDelay: '1.1s' }}>
-                  <WeeklyTrendChart />
-                </div>
-                <div className="slide-up" style={{ animationDelay: '1.2s' }}>
-                  <CategoryTrendChart />
-                </div>
-                <div className="slide-up" style={{ animationDelay: '1.3s' }}>
-                  <ResolutionTimeChart />
-                </div>
-              </div>
+                </>
+              )}
             </div>
           )}
           

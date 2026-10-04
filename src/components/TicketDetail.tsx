@@ -15,44 +15,49 @@ import {
   AlertTriangle,
   Edit
 } from 'lucide-react'
-import { Ticket } from '../data/ticketsData'
+import { Database } from '../services/supabase'
+import { ReportsService } from '../services/reportsService'
+
+type ReportWithAnalysis = Database['public']['Views']['reports_with_analysis']['Row']
 
 interface TicketDetailProps {
-  ticket: Ticket
+  ticket: ReportWithAnalysis
   onClose: () => void
-  onUpdate: (ticket: Ticket) => void
+  onUpdate: (ticket: ReportWithAnalysis) => void
 }
 
 const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose, onUpdate }) => {
-  const [status, setStatus] = useState(ticket.status)
-  const [assignedTo, setAssignedTo] = useState(ticket.assignedTo || '')
+  const [status, setStatus] = useState(ticket.status || 'RECEIVED')
+  const [assignedTo, setAssignedTo] = useState(ticket.assigned_team || '')
   const [notes, setNotes] = useState('')
   const [isEditing, setIsEditing] = useState(false)
+  const [isUpdating, setIsUpdating] = useState(false)
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'open':
+      case 'RECEIVED':
         return 'text-blue-400'
-      case 'in_progress':
+      case 'ANALYZING':
+        return 'text-yellow-400'
+      case 'ASSIGNED':
+      case 'IN_PROGRESS':
         return 'text-orange-400'
-      case 'resolved':
+      case 'RESOLVED':
         return 'text-green-400'
-      case 'closed':
-        return 'text-gray-400'
       default:
         return 'text-gray-400'
     }
   }
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'urgent':
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'CRITICAL':
         return 'bg-purple-600 text-white'
-      case 'high':
+      case 'HIGH':
         return 'bg-red-600 text-white'
-      case 'medium':
+      case 'MEDIUM':
         return 'bg-orange-600 text-white'
-      case 'low':
+      case 'LOW':
         return 'bg-green-600 text-white'
       default:
         return 'bg-gray-600 text-white'
@@ -61,15 +66,15 @@ const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose, onUpdate }
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'network':
+      case 'NETWORK':
         return <AlertTriangle className="text-red-400" size={20} />
-      case 'mpesa':
+      case 'MPESA':
         return <MessageSquare className="text-green-400" size={20} />
-      case 'app':
+      case 'APP_UX':
         return <Smartphone className="text-orange-400" size={20} />
-      case 'billing':
+      case 'BILLING':
         return <MessageSquare className="text-purple-400" size={20} />
-      case 'features':
+      case 'FEATURE_REQUEST':
         return <Star className="text-blue-400" size={20} />
       default:
         return <MessageSquare className="text-gray-400" size={20} />

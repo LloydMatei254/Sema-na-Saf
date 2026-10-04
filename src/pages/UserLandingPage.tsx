@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { MessageSquare, Phone, MapPin, User, Mail, Send, CheckCircle, LogOut, AlertTriangle, FileText, Users, BarChart3 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { useCreateReport, useMyReports } from '../hooks/useReports'
 
 interface ComplaintData {
   name: string
@@ -12,8 +13,13 @@ interface ComplaintData {
 
 const UserLandingPage: React.FC = () => {
   const { user, logout } = useAuth()
+  const { createReport, loading: submitting } = useCreateReport()
+  const { reports: myReports } = useMyReports()
+  
   const [showComplaintForm, setShowComplaintForm] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submittedTicket, setSubmittedTicket] = useState<string>('')
+
   const [complaint, setComplaint] = useState<ComplaintData>({
     name: user?.name || '',
     email: user?.email || '',
@@ -23,12 +29,12 @@ const UserLandingPage: React.FC = () => {
   })
 
   const issueTypes = [
-    'Service Quality',
+    'Network Issues',
+    'M-PESA Problems', 
     'Billing Issues',
-    'Network Problems',
-    'Customer Service',
-    'Technical Support',
-    'General Inquiry',
+    'App Problems',
+    'Service Quality',
+    'Feature Request',
     'Emergency Services',
     'Other'
   ]
@@ -36,37 +42,71 @@ const UserLandingPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Simulate submission
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    // Store complaint (in real app, this would go to backend)
-    const complaints = JSON.parse(localStorage.getItem('sema_complaints') || '[]')
-    const newComplaint = {
-      ...complaint,
-      id: Date.now().toString(),
-      timestamp: new Date().toISOString(),
-      status: 'submitted'
-    }
-    complaints.push(newComplaint)
-    localStorage.setItem('sema_complaints', JSON.stringify(complaints))
-    
-    setSubmitted(true)
-    setTimeout(() => {
-      setSubmitted(false)
-      setShowComplaintForm(false)
-      setComplaint({
-        name: user?.name || '',
-        email: user?.email || '',
-        location: user?.location || '',
-        issueType: '',
-        description: ''
+    try {
+      // Simulate getting location
+      let latitude: number | undefined
+      let longitude: number | undefined
+      
+      if (navigator.geolocation) {
+        try {
+          const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
+          })
+          latitude = position.coords.latitude
+          longitude = position.coords.longitude
+        } catch (error) {
+          console.log('Location access denied or unavailable')
+        }
+      }
+
+      // Simulate telemetry data
+      const telemetry = {
+        networkType: '4G',
+        signalStrength: -75 + Math.floor(Math.random() * 40), // -75 to -35 dBm
+        latencyMs: 50 + Math.floor(Math.random() * 200), // 50-250ms
+        deviceModel: navigator.userAgent.includes('iPhone') ? 'iPhone' : 
+                    navigator.userAgent.includes('Samsung') ? 'Samsung Galaxy' : 
+                    'Android Device',
+        osVersion: navigator.userAgent.includes('iPhone') ? 'iOS 17' : 'Android 14',
+        appScreen: 'complaint-form'
+      }
+
+      const report = await createReport({
+        description: complaint.description,
+        inputType: 'TEXT',
+        locationName: complaint.location,
+        latitude,
+        longitude,
+        telemetry: {
+          network_type: '4G',
+          signal_strength: -75 + Math.floor(Math.random() * 40),
+          latency_ms: 50 + Math.floor(Math.random() * 200),
+          device_model: navigator.userAgent.includes('iPhone') ? 'iPhone' : 
+                       navigator.userAgent.includes('Samsung') ? 'Samsung Galaxy' : 
+                       'Android Device',
+          os_version: navigator.userAgent.includes('iPhone') ? 'iOS 17' : 'Android 14',
+          app_screen: 'complaint-form'
+        }
       })
-    }, 3000)
+
+      setSubmittedTicket(report.ticket_number)
+      setSubmitted(true)
+
+      // Reset after showing success
+      setTimeout(() => {
+        handleClose()
+      }, 3000)
+
+    } catch (error) {
+      console.error('Failed to submit complaint:', error)
+      alert('Failed to submit complaint. Please try again.')
+    }
   }
 
   const handleClose = () => {
     setShowComplaintForm(false)
     setSubmitted(false)
+    setSubmittedTicket('')
     setComplaint({
       name: user?.name || '',
       email: user?.email || '',
@@ -127,6 +167,34 @@ const UserLandingPage: React.FC = () => {
             <span>Submit Your Complaint</span>
           </button>
         </div>
+
+        {/* My Reports Section */}
+        {myReports && myReports.length > 0 && (
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">My Recent Reports</h2>
+            <div className="space-y-3">
+              {myReports.slice(0, 3).map((report) => (
+                <div key={report.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-900">{report.ticket_number}</p>
+                    <p className="text-sm text-gray-600 truncate max-w-md">{report.description}</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      report.status === 'RESOLVED' ? 'bg-green-100 text-green-800' :
+                      report.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800' :
+                      report.status === 'ASSIGNED' ? 'bg-yellow-100 text-yellow-800' :
+                      report.status === 'ANALYZING' ? 'bg-purple-100 text-purple-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {report.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -345,12 +413,12 @@ const UserLandingPage: React.FC = () => {
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Complaint Submitted Successfully!</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Report Submitted Successfully!</h3>
                 <p className="text-gray-600 mb-4">
-                  Thank you for your feedback. Your complaint has been received and will be reviewed by our team.
+                  Thank you for your feedback. Your report <strong>{submittedTicket}</strong> has been received and is being processed by our AI system.
                 </p>
                 <p className="text-sm text-gray-500">
-                  You will receive updates via email. This window will close automatically.
+                  You will receive updates via email and notifications. This window will close automatically.
                 </p>
               </div>
             )}

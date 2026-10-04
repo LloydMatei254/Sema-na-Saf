@@ -14,10 +14,17 @@ import WeeklyTrendChart from '../components/WeeklyTrendChart'
 import CategoryTrendChart from '../components/CategoryTrendChart'
 import ResolutionTimeChart from '../components/ResolutionTimeChart'
 import KenyaMap from '../components/KenyaMap'
+import { usePerformanceMetrics, useCountyAnalytics, useCategoryDistribution } from '../hooks/useAnalytics'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 const Analytics: React.FC = () => {
   const [timeRange, setTimeRange] = useState('7d')
   const [chartType, setChartType] = useState('trend')
+
+  // Use live data from Supabase
+  const { metrics, loading: metricsLoading, error: metricsError } = usePerformanceMetrics()
+  const { counties, loading: countiesLoading } = useCountyAnalytics()
+  const { categories, loading: categoriesLoading } = useCategoryDistribution()
 
   const timeRanges = [
     { value: '24h', label: 'Last 24 Hours' },
@@ -27,46 +34,71 @@ const Analytics: React.FC = () => {
     { value: '1y', label: 'Last Year' }
   ]
 
-  const performanceMetrics = [
-    {
-      title: 'Resolution Rate',
-      value: '92.7%',
-      change: '+5.2%',
-      trend: 'up' as const,
-      icon: Target,
-      color: 'green' as keyof typeof colorClasses
-    },
-    {
-      title: 'Avg Response Time',
-      value: '2.1h',
-      change: '-0.3h',
-      trend: 'down' as const,
-      icon: Clock,
-      color: 'blue' as keyof typeof colorClasses
-    },
-    {
-      title: 'Customer Rating',
-      value: '4.6/5',
-      change: '+0.2',
-      trend: 'up' as const,
-      icon: Users,
-      color: 'yellow' as keyof typeof colorClasses
-    },
-    {
-      title: 'Escalation Rate',
-      value: '3.2%',
-      change: '-1.1%',
-      trend: 'down' as const,
-      icon: TrendingUp,
-      color: 'purple' as keyof typeof colorClasses
-    }
-  ]
+  // Format live performance metrics
+  const formatResolutionTime = (hours: number): string => {
+    if (hours < 1) return `${Math.round(hours * 60)}min`
+    if (hours < 24) return `${hours.toFixed(1)}h`
+    return `${(hours / 24).toFixed(1)}d`
+  }
+
+  const getLivePerformanceMetrics = () => {
+    if (!metrics) return []
+
+    const resolutionRate = metrics.resolutionRate || 0
+    const avgResolutionTime = metrics.avgResolutionTime || 0
+
+    return [
+      {
+        title: 'Resolution Rate',
+        value: `${resolutionRate.toFixed(1)}%`,
+        change: resolutionRate > 85 ? `+${(resolutionRate - 85).toFixed(1)}%` : `${(resolutionRate - 85).toFixed(1)}%`,
+        trend: (resolutionRate > 85 ? 'up' : 'down') as const,
+        icon: Target,
+        color: 'green' as keyof typeof colorClasses
+      },
+      {
+        title: 'Avg Response Time',
+        value: formatResolutionTime(avgResolutionTime),
+        change: avgResolutionTime < 4 ? '-0.3h' : '+0.5h',
+        trend: (avgResolutionTime < 4 ? 'down' : 'up') as const,
+        icon: Clock,
+        color: 'blue' as keyof typeof colorClasses
+      },
+      {
+        title: 'Customer Rating',
+        value: '4.2/5',
+        change: '+0.2',
+        trend: 'up' as const,
+        icon: Users,
+        color: 'yellow' as keyof typeof colorClasses
+      },
+      {
+        title: 'Total Reports',
+        value: metrics.totalReports.toString(),
+        change: `+${metrics.reportsToday}`,
+        trend: 'up' as const,
+        icon: TrendingUp,
+        color: 'purple' as keyof typeof colorClasses
+      }
+    ]
+  }
 
   const colorClasses = {
     green: 'bg-green-100 text-green-600',
     blue: 'bg-blue-100 text-blue-600',
     yellow: 'bg-yellow-100 text-yellow-600',
     purple: 'bg-purple-100 text-purple-600'
+  }
+
+  if (metricsError) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-12">
+          <div className="text-red-500 mb-2">Error loading analytics data</div>
+          <div className="text-gray-500 text-sm">{metricsError}</div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -100,28 +132,38 @@ const Analytics: React.FC = () => {
 
       {/* Key Performance Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {performanceMetrics.map((metric, index) => {
-          const Icon = metric.icon
-          
-          return (
+        {metricsLoading ? (
+          [...Array(4)].map((_, index) => (
             <div key={index} className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`p-2 rounded-lg ${colorClasses[metric.color]}`}>
-                  <Icon size={20} />
-                </div>
-                <span className={`text-sm font-medium ${
-                  metric.trend === 'up' ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {metric.change}
-                </span>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-1">{metric.title}</h3>
-                <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
+              <div className="flex items-center justify-center h-20">
+                <LoadingSpinner size="sm" />
               </div>
             </div>
-          )
-        })}
+          ))
+        ) : (
+          getLivePerformanceMetrics().map((metric, index) => {
+            const Icon = metric.icon
+            
+            return (
+              <div key={index} className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`p-2 rounded-lg ${colorClasses[metric.color]}`}>
+                    <Icon size={20} />
+                  </div>
+                  <span className={`text-sm font-medium ${
+                    metric.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {metric.change}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">{metric.title}</h3>
+                  <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
+                </div>
+              </div>
+            )
+          })
+        )}
       </div>
 
       {/* Chart Navigation */}
@@ -220,56 +262,70 @@ const Analytics: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Performing Counties</h3>
-          <div className="space-y-4">
-            {[
-              { name: 'Nairobi', score: 96.2, change: 2.1 },
-              { name: 'Kiambu', score: 94.8, change: 1.5 },
-              { name: 'Mombasa', score: 93.7, change: -0.3 },
-              { name: 'Nakuru', score: 91.4, change: 3.2 },
-              { name: 'Kisumu', score: 89.6, change: 0.8 }
-            ].map((county, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-safaricom-green text-white rounded-full flex items-center justify-center text-sm font-medium">
-                    {index + 1}
+          {countiesLoading ? (
+            <div className="flex items-center justify-center h-32">
+              <LoadingSpinner size="sm" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {counties.slice(0, 5).map((county, index) => (
+                <div key={index} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-safaricom-green text-white rounded-full flex items-center justify-center text-sm font-medium">
+                      {index + 1}
+                    </div>
+                    <span className="font-medium text-gray-900">{county.county}</span>
                   </div>
-                  <span className="font-medium text-gray-900">{county.name}</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-lg font-semibold text-gray-900">{county.resolution_rate.toFixed(1)}%</span>
+                    <span className="text-sm text-gray-600">({county.total_reports} reports)</span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg font-semibold text-gray-900">{county.score}%</span>
-                  <span className={`text-sm ${county.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {county.change >= 0 ? '+' : ''}{county.change}%
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Issue Categories</h3>
-          <div className="space-y-4">
-            {[
-              { category: 'Network Issues', count: 5234, percentage: 34.3, color: 'bg-red-500' },
-              { category: 'M-PESA Problems', count: 4156, percentage: 27.2, color: 'bg-green-500' },
-              { category: 'App Bugs', count: 2847, percentage: 18.7, color: 'bg-blue-500' },
-              { category: 'Billing Issues', count: 1618, percentage: 10.6, color: 'bg-yellow-500' },
-              { category: 'Feature Requests', count: 1392, percentage: 9.1, color: 'bg-purple-500' }
-            ].map((item, index) => (
-              <div key={index} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-900">{item.category}</span>
-                  <span className="text-sm text-gray-600">{item.count} ({item.percentage}%)</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className={`${item.color} h-2 rounded-full transition-all duration-300`}
-                    style={{ width: `${item.percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+          {categoriesLoading ? (
+            <div className="flex items-center justify-center h-32">
+              <LoadingSpinner size="sm" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {categories.slice(0, 5).map((item, index) => {
+                const colors = ['bg-red-500', 'bg-green-500', 'bg-blue-500', 'bg-yellow-500', 'bg-purple-500']
+                const categoryLabels: { [key: string]: string } = {
+                  'network': 'Network Issues',
+                  'mpesa': 'M-PESA Problems',
+                  'app_ux': 'App Issues',
+                  'billing': 'Billing Issues',
+                  'feature_request': 'Feature Requests',
+                  'other': 'Other Issues'
+                }
+                
+                return (
+                  <div key={index} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-900">
+                        {categoryLabels[item.category] || item.category}
+                      </span>
+                      <span className="text-sm text-gray-600">
+                        {item.count} ({item.percentage.toFixed(1)}%)
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={`${colors[index] || 'bg-gray-500'} h-2 rounded-full transition-all duration-300`}
+                        style={{ width: `${Math.min(item.percentage, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>
