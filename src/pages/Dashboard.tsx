@@ -16,10 +16,12 @@ import Officers from './Officers'
 import Settings from './Settings'
 import Analytics from './Analytics'
 import { metricsData } from '../data/metricsData'
+import { FilterProvider, useFilter } from '../contexts/FilterContext'
 
-const Dashboard: React.FC = () => {
+const DashboardContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { selectedCounty, setSelectedCounty } = useFilter()
 
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -27,6 +29,10 @@ const Dashboard: React.FC = () => {
 
   const handleMobileMenuClose = () => {
     setIsMobileMenuOpen(false)
+  }
+
+  const handleCountyClick = (countyId: string) => {
+    setSelectedCounty(countyId)
   }
 
   return (
@@ -76,7 +82,10 @@ const Dashboard: React.FC = () => {
                 {/* Map and Charts */}
                 <div className="space-y-4 sm:space-y-6">
                   <div className="slide-up" style={{ animationDelay: '0.8s' }}>
-                    <KenyaMap />
+                    <KenyaMap 
+                      onCountyClick={handleCountyClick}
+                      selectedCounty={selectedCounty !== 'all' ? selectedCounty : null}
+                    />
                   </div>
                   
                   <div className="slide-up" style={{ animationDelay: '0.9s' }}>
@@ -149,6 +158,14 @@ const Dashboard: React.FC = () => {
         </div>
       </main>
     </div>
+  )
+}
+
+const Dashboard: React.FC = () => {
+  return (
+    <FilterProvider>
+      <DashboardContent />
+    </FilterProvider>
   )
 }
 

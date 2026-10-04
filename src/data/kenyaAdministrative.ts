@@ -127,17 +127,40 @@ export const allDistricts: District[] = [
   { id: 'kathiani', name: 'Kathiani', countyId: 'machakos', population: 120000 },
   { id: 'mavoko', name: 'Mavoko', countyId: 'machakos', population: 250000 },
   
+  // Kitui County Districts (Eastern Region)
+  { id: 'kitui-central', name: 'Kitui Central', countyId: 'kitui', population: 180000 },
+  { id: 'kitui-west', name: 'Kitui West', countyId: 'kitui', population: 150000 },
+  { id: 'kitui-rural', name: 'Kitui Rural', countyId: 'kitui', population: 120000 },
+  { id: 'kitui-south', name: 'Kitui South', countyId: 'kitui', population: 95000 },
+  { id: 'kitui-east', name: 'Kitui East', countyId: 'kitui', population: 110000 },
+  { id: 'mwingi-north', name: 'Mwingi North', countyId: 'kitui', population: 130000 },
+  { id: 'mwingi-west', name: 'Mwingi West', countyId: 'kitui', population: 125000 },
+  { id: 'mwingi-central', name: 'Mwingi Central', countyId: 'kitui', population: 140000 },
+  
   // Kakamega County Districts
   { id: 'kakamega-central', name: 'Kakamega Central', countyId: 'kakamega', population: 300000 },
   { id: 'butere', name: 'Butere', countyId: 'kakamega', population: 200000 },
   { id: 'mumias', name: 'Mumias', countyId: 'kakamega', population: 250000 },
   { id: 'lugari', name: 'Lugari', countyId: 'kakamega', population: 180000 },
-  
+
   // Add more districts for other counties as needed...
 ]
 
-// Sample Divisions (Major ones for sample districts)
+// Comprehensive Divisions including Kitui South
 export const allDivisions: Division[] = [
+  // Kitui South District Divisions
+  { id: 'kitui-south-central', name: 'Kitui South Central', districtId: 'kitui-south', population: 25000 },
+  { id: 'ikanga-kyatune', name: 'Ikanga/Kyatune', districtId: 'kitui-south', population: 20000 },
+  { id: 'mutomo', name: 'Mutomo', districtId: 'kitui-south', population: 18000 },
+  { id: 'ikutha', name: 'Ikutha', districtId: 'kitui-south', population: 16000 },
+  { id: 'kanziko', name: 'Kanziko', districtId: 'kitui-south', population: 16000 },
+  
+  // Kitui Central District Divisions
+  { id: 'township', name: 'Township', districtId: 'kitui-central', population: 45000 },
+  { id: 'mulango', name: 'Mulango', districtId: 'kitui-central', population: 35000 },
+  { id: 'kyuso', name: 'Kyuso', districtId: 'kitui-central', population: 30000 },
+  { id: 'kisasi', name: 'Kisasi', districtId: 'kitui-central', population: 25000 },
+  { id: 'lower-yatta', name: 'Lower Yatta', districtId: 'kitui-central', population: 45000 },
   // Nairobi Central District Divisions
   { id: 'central-business-district', name: 'Central Business District', districtId: 'nairobi-central', population: 50000 },
   { id: 'ngara', name: 'Ngara', districtId: 'nairobi-central', population: 80000 },
@@ -220,20 +243,91 @@ export const getDivisionsByDistrict = (districtId: string) => {
   return allDivisions.filter(division => division.districtId === districtId)
 }
 
-export const searchLocations = (query: string) => {
-  const searchTerm = query.toLowerCase()
+// Get hierarchical path information
+export const getLocationPath = (divisionId?: string, districtId?: string, countyId?: string) => {
+  const path: { type: string, name: string, id: string }[] = []
   
-  const counties = allCounties.filter(county => 
-    county.name.toLowerCase().includes(searchTerm)
-  ).map(county => ({ ...county, type: 'county' }))
+  if (countyId) {
+    const county = allCounties.find(c => c.id === countyId)
+    if (county) {
+      path.push({ type: 'county', name: county.name, id: county.id })
+    }
+  }
   
-  const districts = allDistricts.filter(district => 
-    district.name.toLowerCase().includes(searchTerm)
-  ).map(district => ({ ...district, type: 'district' }))
+  if (districtId) {
+    const district = allDistricts.find(d => d.id === districtId)
+    if (district) {
+      path.push({ type: 'district', name: district.name, id: district.id })
+      if (!countyId) {
+        const county = allCounties.find(c => c.id === district.countyId)
+        if (county) {
+          path.unshift({ type: 'county', name: county.name, id: county.id })
+        }
+      }
+    }
+  }
   
-  const divisions = allDivisions.filter(division => 
-    division.name.toLowerCase().includes(searchTerm)
-  ).map(division => ({ ...division, type: 'division' }))
+  if (divisionId) {
+    const division = allDivisions.find(d => d.id === divisionId)
+    if (division) {
+      path.push({ type: 'division', name: division.name, id: division.id })
+      if (!districtId) {
+        const district = allDistricts.find(d => d.id === division.districtId)
+        if (district) {
+          path.splice(-1, 0, { type: 'district', name: district.name, id: district.id })
+          if (!countyId) {
+            const county = allCounties.find(c => c.id === district.countyId)
+            if (county) {
+              path.unshift({ type: 'county', name: county.name, id: county.id })
+            }
+          }
+        }
+      }
+    }
+  }
   
-  return [...counties, ...districts, ...divisions]
+  return path
+}
+
+// Generate performance data for districts and divisions
+export const generateDistrictData = (districtId: string) => {
+  const district = allDistricts.find(d => d.id === districtId)
+  if (!district) return null
+  
+  const registrationRate = 0.08 + Math.random() * 0.12
+  const registered = Math.floor(district.population * registrationRate)
+  const resolutionRate = 0.75 + Math.random() * 0.20
+  const resolved = Math.floor(registered * resolutionRate)
+  
+  return {
+    id: district.id,
+    name: district.name,
+    population: district.population,
+    registered,
+    resolved,
+    unresolved: registered - resolved,
+    resolutionRate: (resolved / registered) * 100,
+    type: 'district'
+  }
+}
+
+export const generateDivisionData = (divisionId: string) => {
+  const division = allDivisions.find(d => d.id === divisionId)
+  if (!division) return null
+  
+  const registrationRate = 0.06 + Math.random() * 0.14
+  const registered = Math.floor(division.population * registrationRate)
+  const resolutionRate = 0.70 + Math.random() * 0.25
+  const resolved = Math.floor(registered * resolutionRate)
+  
+  return {
+    id: division.id,
+    name: division.name,
+    population: division.population,
+    registered,
+    resolved,
+    unresolved: registered - resolved,
+    resolutionRate: (resolved / registered) * 100,
+    type: 'division'
+  }
 }
