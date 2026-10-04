@@ -6,18 +6,23 @@ import ErrorBoundary from './components/ErrorBoundary.tsx'
 import './index.css'
 
 // Add debugging for production
-if (import.meta.env.PROD) {
-  console.log('Production build loaded')
-  console.log('Environment:', import.meta.env)
-}
+console.log('Sema Dashboard starting...')
+console.log('Environment:', import.meta.env.MODE)
+console.log('Production:', import.meta.env.PROD)
 
 const root = document.getElementById('root')
 if (!root) {
+  console.error('Root element not found!')
   throw new Error('Failed to find the root element')
 }
 
-// Use debug app in production for testing, regular app in development
-const AppComponent = import.meta.env.PROD ? DebugApp : App
+// Switch between debug and full app
+// Change this to false to use the full app
+const USE_DEBUG_MODE = false
+
+const AppComponent = USE_DEBUG_MODE ? DebugApp : App
+
+console.log('Using component:', USE_DEBUG_MODE ? 'Debug' : 'Full App')
 
 ReactDOM.createRoot(root).render(
   <React.StrictMode>
