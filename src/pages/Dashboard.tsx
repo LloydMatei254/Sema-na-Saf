@@ -27,7 +27,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gray-50">
       <Header onMobileMenuToggle={handleMobileMenuToggle} />
       <Navigation 
         activeTab={activeTab} 
@@ -112,10 +112,10 @@ const Dashboard: React.FC = () => {
           {!['dashboard', 'reports'].includes(activeTab) && (
             <div className="text-center py-12 fade-in">
               <div className="scale-in">
-                <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="w-8 h-8 border-2 border-gray-600 border-t-safaricom-green rounded-full animate-spin"></div>
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg border">
+                  <div className="w-8 h-8 border-2 border-gray-300 border-t-safaricom-green rounded-full animate-spin"></div>
                 </div>
-                <h2 className="text-xl text-gray-400 mb-2">
+                <h2 className="text-xl text-gray-600 mb-2">
                   {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
                 </h2>
                 <p className="text-gray-500">Content coming soon...</p>

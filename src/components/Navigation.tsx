@@ -33,7 +33,7 @@ const Navigation: React.FC<NavigationProps> = ({
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block bg-gray-850 border-b border-gray-700">
+      <nav className="hidden md:block bg-white border-b border-gray-200 shadow-sm">
         <div className="px-4 sm:px-6">
           <div className="flex space-x-6 lg:space-x-8 overflow-x-auto">
             {tabs.map((tab) => (
@@ -53,12 +53,12 @@ const Navigation: React.FC<NavigationProps> = ({
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onMobileMenuClose} />
-          <div className="fixed top-0 left-0 bottom-0 w-64 bg-gray-800 border-r border-gray-700 transform transition-transform duration-300 ease-in-out">
-            <div className="flex items-center justify-between p-4 border-b border-gray-700">
-              <h2 className="text-lg font-semibold text-white">Menu</h2>
+          <div className="fixed top-0 left-0 bottom-0 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out shadow-lg">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
               <button
                 onClick={onMobileMenuClose}
-                className="p-2 text-gray-400 hover:text-white transition-colors"
+                className="p-2 text-gray-600 hover:text-safaricom-green transition-colors"
               >
                 <X size={20} />
               </button>
@@ -68,8 +68,8 @@ const Navigation: React.FC<NavigationProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`block w-full text-left px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors ${
-                    activeTab === tab.id ? 'text-white bg-gray-700 border-r-2 border-safaricom-green' : ''
+                  className={`block w-full text-left px-4 py-3 text-gray-600 hover:text-safaricom-green hover:bg-safaricom-lightGreen/30 transition-colors ${
+                    activeTab === tab.id ? 'text-safaricom-green bg-safaricom-lightGreen/50 border-r-2 border-safaricom-green font-medium' : ''
                   }`}
                 >
                   {tab.label}
