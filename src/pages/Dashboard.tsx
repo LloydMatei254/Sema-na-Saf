@@ -12,6 +12,9 @@ import WeeklyTrendChart from '../components/WeeklyTrendChart'
 import CategoryTrendChart from '../components/CategoryTrendChart'
 import ResolutionTimeChart from '../components/ResolutionTimeChart'
 import TicketManagement from './TicketManagement'
+import Officers from './Officers'
+import Settings from './Settings'
+import Analytics from './Analytics'
 import { metricsData } from '../data/metricsData'
 
 const Dashboard: React.FC = () => {
@@ -101,6 +104,27 @@ const Dashboard: React.FC = () => {
             </div>
           )}
           
+          {/* Analytics */}
+          {activeTab === 'analytics' && (
+            <div className="fade-in">
+              <Analytics />
+            </div>
+          )}
+          
+          {/* Officers Management */}
+          {activeTab === 'officers' && (
+            <div className="fade-in">
+              <Officers />
+            </div>
+          )}
+          
+          {/* Settings */}
+          {activeTab === 'settings' && (
+            <div className="fade-in">
+              <Settings />
+            </div>
+          )}
+          
           {/* Ticket Management */}
           {activeTab === 'reports' && (
             <div className="fade-in">
@@ -109,7 +133,7 @@ const Dashboard: React.FC = () => {
           )}
           
           {/* Other tab content */}
-          {!['dashboard', 'reports'].includes(activeTab) && (
+          {!['dashboard', 'reports', 'officers', 'analytics', 'settings'].includes(activeTab) && (
             <div className="text-center py-12 fade-in">
               <div className="scale-in">
                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg border">

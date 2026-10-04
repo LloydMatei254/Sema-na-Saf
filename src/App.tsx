@@ -9,7 +9,7 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gray-50">
         <Routes>
-          <Route path="/" element={<SimpleDashboard />} />
+          <Route path="/" element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/simple" element={<SimpleDashboard />} />
           <Route path="/test" element={<TestComponent />} />

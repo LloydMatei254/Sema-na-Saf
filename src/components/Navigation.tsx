@@ -17,12 +17,12 @@ const Navigation: React.FC<NavigationProps> = ({
   const tabs = [
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'officers', label: 'Officers' },
-    { id: 'locations', label: 'Locations' },
     { id: 'reports', label: 'Reports' },
+    { id: 'analytics', label: 'Analytics' },
+    { id: 'locations', label: 'Locations' },
     { id: 'gaps', label: 'Gaps' },
     { id: 'verify', label: 'Verify' },
-    { id: 'exports', label: 'Exports' },
-    { id: 'download', label: 'Download' },
+    { id: 'settings', label: 'Settings' },
   ]
 
   const handleTabClick = (tabId: string) => {
