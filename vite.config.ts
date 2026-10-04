@@ -22,5 +22,9 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173
+  },
+  esbuild: {
+    // Skip TypeScript type checking in production build
+    logOverride: { 'this-is-undefined-in-esm': 'silent' }
   }
 })
