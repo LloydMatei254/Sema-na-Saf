@@ -15,6 +15,8 @@ import TicketManagement from './TicketManagement'
 import Officers from './Officers'
 import Settings from './Settings'
 import Analytics from './Analytics'
+import Locations from './Locations'
+import Gaps from './Gaps'
 import { metricsData } from '../data/metricsData'
 import { FilterProvider, useFilter } from '../contexts/FilterContext'
 
@@ -141,8 +143,37 @@ const DashboardContent: React.FC = () => {
             </div>
           )}
           
+          {/* Locations Management */}
+          {activeTab === 'locations' && (
+            <div className="fade-in">
+              <Locations />
+            </div>
+          )}
+          
+          {/* Gap Analysis */}
+          {activeTab === 'gaps' && (
+            <div className="fade-in">
+              <Gaps />
+            </div>
+          )}
+          
+          {/* Verify Section */}
+          {activeTab === 'verify' && (
+            <div className="fade-in">
+              <div className="text-center py-12">
+                <div className="scale-in">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg border">
+                    <div className="w-8 h-8 border-2 border-gray-300 border-t-safaricom-green rounded-full animate-spin"></div>
+                  </div>
+                  <h2 className="text-xl text-gray-600 mb-2">Verify</h2>
+                  <p className="text-gray-500">Verification system coming soon...</p>
+                </div>
+              </div>
+            </div>
+          )}
+          
           {/* Other tab content */}
-          {!['dashboard', 'reports', 'officers', 'analytics', 'settings'].includes(activeTab) && (
+          {!['dashboard', 'reports', 'officers', 'analytics', 'settings', 'locations', 'gaps', 'verify'].includes(activeTab) && (
             <div className="text-center py-12 fade-in">
               <div className="scale-in">
                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg border">
