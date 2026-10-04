@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: theme('colors.gray.800');
+  }
+  
+  body {
+    @apply bg-gray-900 text-white font-sans;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-gray-800 rounded-lg border border-gray-700 p-6 transition-all duration-200 hover:shadow-lg hover:border-gray-600;
+  }
+  
+  .metric-card {
+    @apply bg-gray-800 rounded-lg border border-gray-700 p-4 transition-all duration-200 hover:shadow-md hover:border-gray-600 hover:bg-gray-750;
+  }
+  
+  .btn-primary {
+    @apply bg-safaricom-green hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50;
+  }
+  
+  .nav-tab {
+    @apply px-4 py-2 text-gray-300 hover:text-white transition-all duration-200 relative;
+  }
+  
+  .nav-tab.active {
+    @apply text-white border-b-2 border-safaricom-green;
+  }
+  
+  .nav-tab.active::before {
+    content: '';
+    @apply absolute -bottom-px left-0 right-0 h-0.5 bg-safaricom-green rounded-full;
+  }
+  
+  .line-clamp-2 {
+    @apply overflow-hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  
+  .fade-in {
+    @apply animate-fadeIn;
+  }
+  
+  .slide-up {
+    @apply animate-slideUp;
+  }
+  
+  .scale-in {
+    @apply animate-scaleIn;
+  }
+  
+  .loading-pulse {
+    @apply animate-pulse;
+  }
+}
+
+@layer utilities {
+  .container-responsive {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .text-responsive {
+    @apply text-sm sm:text-base;
+  }
+  
+  .grid-responsive-1 {
+    @apply grid grid-cols-1;
+  }
+  
+  .grid-responsive-2 {
+    @apply grid grid-cols-1 sm:grid-cols-2;
+  }
+  
+  .grid-responsive-3 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  .grid-responsive-4 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4;
+  }
+  
+  .grid-responsive-6 {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6;
+  }
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0); 
+  }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.95); 
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1); 
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Mobile improvements */
+@media (max-width: 768px) {
+  .card {
+    @apply p-4;
+  }
+  
+  .metric-card {
+    @apply p-3;
+  }
+}
+
+/* Focus styles for accessibility */
+.focus-visible {
+  @apply outline-none ring-2 ring-blue-500 ring-opacity-50;
+}
