@@ -276,19 +276,19 @@ export const generateDistrictData = (districtId: string) => {
   const district = allDistricts.find(d => d.id === districtId)
   if (!district) return null
   
-  const registrationRate = 0.08 + Math.random() * 0.12
-  const registered = Math.floor(district.population * registrationRate)
+  const participationRate = 0.08 + Math.random() * 0.12
+  const activeReports = Math.floor(district.population * participationRate)
   const resolutionRate = 0.75 + Math.random() * 0.20
-  const resolved = Math.floor(registered * resolutionRate)
+  const resolvedIssues = Math.floor(activeReports * resolutionRate)
   
   return {
     id: district.id,
     name: district.name,
     population: district.population,
-    registered,
-    resolved,
-    unresolved: registered - resolved,
-    resolutionRate: (resolved / registered) * 100,
+    activeReports,
+    resolvedIssues,
+    pendingIssues: activeReports - resolvedIssues,
+    resolutionRate: (resolvedIssues / activeReports) * 100,
     type: 'district'
   }
 }
@@ -297,19 +297,19 @@ export const generateDivisionData = (divisionId: string) => {
   const division = allDivisions.find(d => d.id === divisionId)
   if (!division) return null
   
-  const registrationRate = 0.06 + Math.random() * 0.14
-  const registered = Math.floor(division.population * registrationRate)
+  const participationRate = 0.06 + Math.random() * 0.14
+  const activeReports = Math.floor(division.population * participationRate)
   const resolutionRate = 0.70 + Math.random() * 0.25
-  const resolved = Math.floor(registered * resolutionRate)
+  const resolvedIssues = Math.floor(activeReports * resolutionRate)
   
   return {
     id: division.id,
     name: division.name,
     population: division.population,
-    registered,
-    resolved,
-    unresolved: registered - resolved,
-    resolutionRate: (resolved / registered) * 100,
+    activeReports,
+    resolvedIssues,
+    pendingIssues: activeReports - resolvedIssues,
+    resolutionRate: (resolvedIssues / activeReports) * 100,
     type: 'division'
   }
 }

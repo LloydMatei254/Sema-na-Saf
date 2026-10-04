@@ -9,62 +9,65 @@ export interface MetricData {
 
 export const metricsData: MetricData[] = [
   {
-    title: 'TOTAL CITIZENS',
+    title: 'TOTAL POPULATION',
     value: '34.60M',
-    subtitle: 'connected last month',
+    subtitle: 'citizens across Kenya',
     color: 'blue',
     trend: 'up',
     trendValue: '+2.3%'
   },
   {
-    title: 'UNRESOLVED INCIDENTS',
-    value: '10.89M',
-    subtitle: 'of all incidents to date-date',
+    title: 'ACTIVE COMPLAINTS',
+    value: '10.89K',
+    subtitle: 'pending resolution',
     color: 'orange',
     trend: 'down',
     trendValue: '-1.2%'
   },
   {
-    title: 'REGISTERED TODAY',
-    value: '0',
-    subtitle: 'registered today',
+    title: 'REPORTS SUBMITTED',
+    value: '247',
+    subtitle: 'received today',
     color: 'gray',
-    trend: 'neutral'
+    trend: 'up',
+    trendValue: '+12'
   },
   {
-    title: 'CONVERTED TO DATE',
-    value: '0.0%',
-    subtitle: 'of registrations this day',
-    color: 'red',
-    trend: 'neutral'
-  },
-  {
-    title: 'TARGET ACHIEVED',
-    value: '0%',
-    subtitle: 'of daily target',
-    color: 'red',
-    trend: 'neutral'
-  },
-  {
-    title: 'OFFICERS REPORTING',
-    value: '5',
-    subtitle: 'reporting today',
+    title: 'RESOLUTION RATE',
+    value: '87.3%',
+    subtitle: 'this month',
     color: 'green',
     trend: 'up',
-    trendValue: '+3'
+    trendValue: '+5.2%'
+  },
+  {
+    title: 'SERVICE QUALITY',
+    value: '4.2',
+    subtitle: 'average rating',
+    color: 'green',
+    trend: 'up',
+    trendValue: '+0.3'
+  },
+  {
+    title: 'FIELD OFFICERS',
+    value: '127',
+    subtitle: 'active nationwide',
+    color: 'green',
+    trend: 'up',
+    trendValue: '+8'
   }
 ]
 
 // Additional detailed metrics for Sema-specific data
 export const semaMetrics = {
-  totalTickets: 15847,
+  totalComplaints: 15847,
   resolvedToday: 1234,
   avgResolutionTime: '2.4 hours',
   customerSatisfaction: '4.2/5.0',
-  networkIssues: 3456,
-  appBugs: 1847,
-  featureRequests: 892,
-  activeUsers: '34.6M',
-  churnPrevented: 15.7, // percentage
-  costSavings: 'KES 2.4M' // daily savings from deflected calls
+  infrastructureIssues: 3456,
+  serviceRequests: 1847,
+  emergencyReports: 892,
+  activeCitizens: '34.6M',
+  satisfactionImprovement: 15.7, // percentage
+  costSavings: 'KES 2.4M' // monthly savings from improved efficiency
 }

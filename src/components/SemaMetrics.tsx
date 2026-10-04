@@ -1,5 +1,5 @@
 import React from 'react'
-import { MessageSquare, CheckCircle, Clock, Users, AlertTriangle, Smartphone } from 'lucide-react'
+import { MessageSquare, CheckCircle, Clock, Users, AlertTriangle, Wrench } from 'lucide-react'
 import { semaMetrics } from '../data/metricsData'
 
 const SemaMetrics: React.FC = () => {
@@ -11,15 +11,15 @@ const SemaMetrics: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      {/* Total Feedback Tickets */}
+      {/* Total Complaints */}
       <div className="metric-card">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xs text-gray-400 uppercase tracking-wide">FEEDBACK TICKETS</h3>
+            <h3 className="text-xs text-gray-400 uppercase tracking-wide">TOTAL COMPLAINTS</h3>
             <div className="text-2xl font-bold text-blue-400 mt-2">
-              {formatNumber(semaMetrics.totalTickets)}
+              {formatNumber(semaMetrics.totalComplaints)}
             </div>
-            <div className="text-xs text-gray-400">total received</div>
+            <div className="text-xs text-gray-400">submitted to date</div>
           </div>
           <MessageSquare className="text-blue-400" size={24} />
         </div>
@@ -33,7 +33,7 @@ const SemaMetrics: React.FC = () => {
             <div className="text-2xl font-bold text-green-400 mt-2">
               {formatNumber(semaMetrics.resolvedToday)}
             </div>
-            <div className="text-xs text-gray-400">tickets closed</div>
+            <div className="text-xs text-gray-400">issues addressed</div>
           </div>
           <CheckCircle className="text-green-400" size={24} />
         </div>
@@ -47,7 +47,7 @@ const SemaMetrics: React.FC = () => {
             <div className="text-2xl font-bold text-orange-400 mt-2">
               {semaMetrics.avgResolutionTime}
             </div>
-            <div className="text-xs text-gray-400">average time</div>
+            <div className="text-xs text-gray-400">response time</div>
           </div>
           <Clock className="text-orange-400" size={24} />
         </div>
@@ -61,37 +61,37 @@ const SemaMetrics: React.FC = () => {
             <div className="text-2xl font-bold text-green-400 mt-2">
               {semaMetrics.customerSatisfaction}
             </div>
-            <div className="text-xs text-gray-400">user rating</div>
+            <div className="text-xs text-gray-400">citizen rating</div>
           </div>
           <Users className="text-green-400" size={24} />
         </div>
       </div>
 
-      {/* Network Issues */}
+      {/* Infrastructure Issues */}
       <div className="metric-card">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xs text-gray-400 uppercase tracking-wide">NETWORK ISSUES</h3>
+            <h3 className="text-xs text-gray-400 uppercase tracking-wide">INFRASTRUCTURE</h3>
             <div className="text-2xl font-bold text-red-400 mt-2">
-              {formatNumber(semaMetrics.networkIssues)}
+              {formatNumber(semaMetrics.infrastructureIssues)}
             </div>
-            <div className="text-xs text-gray-400">reported this week</div>
+            <div className="text-xs text-gray-400">reported issues</div>
           </div>
           <AlertTriangle className="text-red-400" size={24} />
         </div>
       </div>
 
-      {/* App Bugs */}
+      {/* Service Requests */}
       <div className="metric-card">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xs text-gray-400 uppercase tracking-wide">APP BUGS</h3>
+            <h3 className="text-xs text-gray-400 uppercase tracking-wide">SERVICE REQUESTS</h3>
             <div className="text-2xl font-bold text-orange-400 mt-2">
-              {formatNumber(semaMetrics.appBugs)}
+              {formatNumber(semaMetrics.serviceRequests)}
             </div>
-            <div className="text-xs text-gray-400">reported this week</div>
+            <div className="text-xs text-gray-400">this month</div>
           </div>
-          <Smartphone className="text-orange-400" size={24} />
+          <Wrench className="text-orange-400" size={24} />
         </div>
       </div>
 
@@ -99,25 +99,25 @@ const SemaMetrics: React.FC = () => {
       <div className="metric-card">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xs text-gray-400 uppercase tracking-wide">COST SAVINGS</h3>
+            <h3 className="text-xs text-gray-400 uppercase tracking-wide">EFFICIENCY GAIN</h3>
             <div className="text-2xl font-bold text-safaricom-green mt-2">
               {semaMetrics.costSavings}
             </div>
-            <div className="text-xs text-gray-400">daily deflection</div>
+            <div className="text-xs text-gray-400">monthly savings</div>
           </div>
           <div className="text-safaricom-green text-2xl">₨</div>
         </div>
       </div>
 
-      {/* Churn Prevention */}
+      {/* Service Improvement */}
       <div className="metric-card">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xs text-gray-400 uppercase tracking-wide">CHURN PREVENTED</h3>
+            <h3 className="text-xs text-gray-400 uppercase tracking-wide">IMPROVEMENT</h3>
             <div className="text-2xl font-bold text-green-400 mt-2">
-              {semaMetrics.churnPrevented}%
+              {semaMetrics.satisfactionImprovement}%
             </div>
-            <div className="text-xs text-gray-400">estimated retention</div>
+            <div className="text-xs text-gray-400">satisfaction boost</div>
           </div>
           <Users className="text-green-400" size={24} />
         </div>

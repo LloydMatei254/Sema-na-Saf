@@ -4,11 +4,11 @@ export interface CountyPerformanceData {
   id: string
   county: string
   totalCitizens: number
-  registered: number
-  unresolved: number
-  resolved: number
-  conversionRate: number
-  targetAchieved: number
+  registered: number // Reports submitted
+  unresolved: number // Pending issues
+  resolved: number   // Resolved issues
+  conversionRate: number // Success rate
+  targetAchieved: number // Goal achievement
   status: 'unassigned' | 'assigned' | 'active' | 'inactive'
   trend: 'up' | 'down' | 'stable'
   region: string
@@ -16,16 +16,16 @@ export interface CountyPerformanceData {
 
 // Generate realistic performance data for all 47 counties
 export const kenyaCountiesData: CountyPerformanceData[] = allCounties.map(county => {
-  // Generate realistic registered users (5-15% of population)
-  const registrationRate = 0.05 + Math.random() * 0.10
-  const registered = Math.floor(county.population * registrationRate)
+  // Generate realistic report submissions (5-15% of population)
+  const participationRate = 0.05 + Math.random() * 0.10
+  const registered = Math.floor(county.population * participationRate)
   
   // Generate resolution data (80-95% resolution rate)
   const resolutionRate = 0.8 + Math.random() * 0.15
   const resolved = Math.floor(registered * resolutionRate)
   const unresolved = registered - resolved
   
-  // Generate conversion and target data
+  // Generate success rate and goal achievement data
   const conversionRate = Math.random() * 5 // 0-5%
   const targetAchieved = Math.random() * 100 // 0-100%
   

@@ -109,7 +109,7 @@ const PerformanceTable: React.FC<PerformanceTableProps> = ({
                   onClick={() => handleSort('registered')}
                   className="flex items-center justify-end space-x-1 hover:text-white transition-colors"
                 >
-                  <span>Registered</span>
+                  <span>Reports</span>
                   <ChevronDown size={14} />
                 </button>
               </th>
@@ -118,7 +118,7 @@ const PerformanceTable: React.FC<PerformanceTableProps> = ({
                   onClick={() => handleSort('unresolved')}
                   className="flex items-center justify-end space-x-1 hover:text-white transition-colors"
                 >
-                  <span>Unresolved</span>
+                  <span>Pending</span>
                   <ChevronDown size={14} />
                 </button>
               </th>
@@ -136,7 +136,7 @@ const PerformanceTable: React.FC<PerformanceTableProps> = ({
                   onClick={() => handleSort('conversionRate')}
                   className="flex items-center justify-end space-x-1 hover:text-white transition-colors"
                 >
-                  <span>Conversion</span>
+                  <span>Success Rate</span>
                   <ChevronDown size={14} />
                 </button>
               </th>
@@ -145,7 +145,7 @@ const PerformanceTable: React.FC<PerformanceTableProps> = ({
                   onClick={() => handleSort('targetAchieved')}
                   className="flex items-center justify-end space-x-1 hover:text-white transition-colors"
                 >
-                  <span>Target</span>
+                  <span>Goal</span>
                   <ChevronDown size={14} />
                 </button>
               </th>
@@ -209,11 +209,11 @@ const PerformanceTable: React.FC<PerformanceTableProps> = ({
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-            <span>Unassigned</span>
+            <span>Attention Needed</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-            <span>Issues</span>
+            <span>Critical</span>
           </div>
         </div>
       </div>
