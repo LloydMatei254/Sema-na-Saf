@@ -30,10 +30,10 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
         
         <div className="flex items-center space-x-2 sm:space-x-4">
           <span className="hidden sm:block text-sm text-gray-700 font-medium">Sema System Admin</span>
-          <button className="p-2 text-gray-600 hover:text-safaricom-green transition-colors hover:bg-safaricom-lightGreen/50 rounded-lg">
+          <button className="p-2 text-gray-600 hover:text-safaricom-green transition-colors hover:bg-green-50 rounded-lg">
             <Bell size={20} />
           </button>
-          <button className="p-2 text-gray-600 hover:text-safaricom-green transition-colors hover:bg-safaricom-lightGreen/50 rounded-lg">
+          <button className="p-2 text-gray-600 hover:text-safaricom-green transition-colors hover:bg-green-50 rounded-lg">
             <Settings size={20} />
           </button>
           <div className="flex items-center space-x-2">

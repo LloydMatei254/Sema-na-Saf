@@ -68,8 +68,8 @@ const Navigation: React.FC<NavigationProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`block w-full text-left px-4 py-3 text-gray-600 hover:text-safaricom-green hover:bg-safaricom-lightGreen/30 transition-colors ${
-                    activeTab === tab.id ? 'text-safaricom-green bg-safaricom-lightGreen/50 border-r-2 border-safaricom-green font-medium' : ''
+                  className={`block w-full text-left px-4 py-3 text-gray-600 hover:text-safaricom-green hover:bg-green-50 transition-colors ${
+                    activeTab === tab.id ? 'text-safaricom-green bg-green-100 border-r-2 border-safaricom-green font-medium' : ''
                   }`}
                 >
                   {tab.label}
