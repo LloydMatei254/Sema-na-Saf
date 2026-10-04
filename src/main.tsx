@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-import DebugApp from './App.debug.tsx'
 import ErrorBoundary from './components/ErrorBoundary.tsx'
 import './index.css'
 
@@ -16,18 +15,12 @@ if (!root) {
   throw new Error('Failed to find the root element')
 }
 
-// Switch between debug and full app
-// Change this to false to use the full app
-const USE_DEBUG_MODE = false
-
-const AppComponent = USE_DEBUG_MODE ? DebugApp : App
-
-console.log('Using component:', USE_DEBUG_MODE ? 'Debug' : 'Full App')
+console.log('Using Full App Component')
 
 ReactDOM.createRoot(root).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <AppComponent />
+      <App />
     </ErrorBoundary>
   </React.StrictMode>,
 )
