@@ -5,7 +5,7 @@ import { FilterProvider } from './contexts/FilterContext'
 import Login from './components/Login'
 import Dashboard from './pages/Dashboard'
 import UserLandingPage from './pages/UserLandingPage'
-import PublicLandingPage from './pages/PublicLandingPage'
+import EnhancedLandingPage from './pages/EnhancedLandingPage'
 import './App.css'
 
 // Main App Content Component
@@ -28,7 +28,7 @@ const AppContent: React.FC = () => {
 
   // Show public landing page if not authenticated and login not requested
   if (!isAuthenticated && !showLogin) {
-    return <PublicLandingPage onLoginClick={() => setShowLogin(true)} />
+    return <EnhancedLandingPage onLoginClick={() => setShowLogin(true)} />
   }
 
   // Show login page if login requested but not authenticated
