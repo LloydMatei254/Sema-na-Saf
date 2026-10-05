@@ -6,8 +6,8 @@ const customerComplaints = [
   {
     id: 1,
     name: "Vincent Yator",
-    role: "Mechanical Plant Technologist",
-    location: "Muchukwo, Barwesa Ward", 
+    role: "Mechanical Plant Technologist", 
+    location: "Muchukwo, Barwesa Ward",
     issue: "Network Coverage",
     complaint: "Calling on Safaricom PLC to help improve network coverage in Muchukwo, Barwesa Ward. Residents continue to experience frequent network disruptions, poor call quality, and unreliable mobile data.",
     impact: "Affecting everyday communication, mobile money transactions, and access to essential services for the community.",
@@ -24,8 +24,8 @@ const customerComplaints = [
     issue: "Fraudulent Transaction",
     complaint: "I asked for reversal since morning and no communication so far. This person scammed me and here's his number: +254713279744",
     impact: "Financial loss and delayed response to fraudulent activities affecting customer trust.",
-    timestamp: "3 days ago", 
-    category: "Fraud & Security",
+    timestamp: "3 days ago",
+    category: "Fraud & Security", 
     severity: "Critical",
     hashtags: ["#SafaricomFraud", "#MobileMoney", "#CustomerService"]
   },
@@ -33,54 +33,22 @@ const customerComplaints = [
     id: 3,
     name: "Nelson Mitei",
     role: "Monitoring, Evaluation, Accountability & Learning",
-    location: "Kenya",
-    issue: "Network Response", 
+    location: "Kenya", 
+    issue: "Network Response",
     complaint: "Safaricom PLC you never responded on network issue I raised earlier. Still experiencing connectivity problems in my area.",
     impact: "Ongoing network issues without proper customer support response affecting business operations.",
     timestamp: "2 days ago",
-    category: "Customer Support", 
+    category: "Customer Support",
     severity: "Medium",
     hashtags: ["#SafaricomSupport", "#NetworkIssues", "#CustomerCare"]
   }
 ]
 
-const features = [
-  {
-    icon: MessageSquare,
-    title: "Voice Your Concerns",
-    description: "Report network issues, service problems, and provide feedback directly to Safaricom through our streamlined platform."
-  },
-  {
-    icon: TrendingUp,
-    title: "Track Resolution",
-    description: "Monitor the progress of your complaints and see real-time updates on resolution status and estimated timelines."
-  }
-]
-const features2 = [
-  {
-    icon: Users,
-    title: "Community Impact", 
-    description: "Join thousands of Kenyans making their voices heard and driving improvements in telecommunications services."
-  },
-  {
-    icon: MapPin,
-    title: "Location-Based Reports",
-    description: "Help identify network gaps and service issues across different regions in Kenya for targeted improvements."
-  }
-]
-
-const stats = [
-  { number: "10,000+", label: "Reports Submitted" },
-  { number: "85%", label: "Resolution Rate" },
-  { number: "47", label: "Counties Covered" },
-  { number: "24/7", label: "Support Available" }
-]
-
-interface EnhancedLandingPageProps {
+interface SimpleLandingPageProps {
   onLoginClick?: () => void
 }
 
-const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onLoginClick }) => {
+const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) => {
   const [currentComplaint, setCurrentComplaint] = useState(0)
   const [isPlaying, setIsPlaying] = useState(true)
 
@@ -90,7 +58,7 @@ const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onLoginClick 
     
     const timer = setInterval(() => {
       setCurrentComplaint((prev) => (prev + 1) % customerComplaints.length)
-    }, 5000) // Change every 5 seconds
+    }, 5000)
     
     return () => clearInterval(timer)
   }, [isPlaying])
@@ -135,7 +103,6 @@ const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onLoginClick 
               <a href="#features" className="text-gray-600 hover:text-safaricom-green transition-colors">Features</a>
               <a href="#complaints" className="text-gray-600 hover:text-safaricom-green transition-colors">Real Issues</a>
               <a href="#stats" className="text-gray-600 hover:text-safaricom-green transition-colors">Impact</a>
-              <a href="#contact" className="text-gray-600 hover:text-safaricom-green transition-colors">Contact</a>
             </nav>
 
             <div className="flex items-center space-x-4">
@@ -145,16 +112,14 @@ const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onLoginClick 
               >
                 Sign In
               </button>
-              <button
-                onClick={() => window.location.href = '/user-landing'}
-                className="bg-safaricom-green hover:bg-safaricom-green/90 text-white px-6 py-2 rounded-lg font-medium transition-all transform hover:scale-105"
-              >
+              <button className="bg-safaricom-green hover:bg-safaricom-green/90 text-white px-6 py-2 rounded-lg font-medium transition-all">
                 Report Issue
               </button>
             </div>
           </div>
         </div>
       </header>
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-safaricom-green/10 via-white to-blue-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -168,25 +133,19 @@ const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onLoginClick 
               and driving improvements in network coverage and customer service across the country.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-              <Link
-                to="/user-landing"
-                className="bg-safaricom-green hover:bg-safaricom-green/90 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 flex items-center space-x-2 shadow-lg"
-              >
+              <button className="bg-safaricom-green hover:bg-safaricom-green/90 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 flex items-center space-x-2 shadow-lg">
                 <MessageSquare className="w-5 h-5" />
                 <span>Submit Your Report</span>
                 <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                to="/dashboard"
-                className="border-2 border-safaricom-green text-safaricom-green hover:bg-safaricom-green hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all flex items-center space-x-2"
-              >
+              </button>
+              <button className="border-2 border-safaricom-green text-safaricom-green hover:bg-safaricom-green hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all flex items-center space-x-2">
                 <TrendingUp className="w-5 h-5" />
                 <span>View Dashboard</span>
-              </Link>
+              </button>
             </div>
           </div>
         </div>
-
+        
         {/* Floating Elements */}
         <div className="absolute top-20 left-10 w-20 h-20 bg-safaricom-green/20 rounded-full animate-bounce"></div>
         <div className="absolute bottom-20 right-10 w-32 h-32 bg-blue-200/30 rounded-full animate-pulse"></div>
@@ -211,7 +170,6 @@ const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onLoginClick 
               <button
                 onClick={togglePlayPause}
                 className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-colors"
-                title={isPlaying ? 'Pause slideshow' : 'Play slideshow'}
               >
                 {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               </button>
@@ -228,6 +186,7 @@ const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onLoginClick 
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
+
             {/* Complaint Content */}
             <div className="p-8 md:p-12 min-h-[500px] flex items-center">
               <div className="w-full">
@@ -313,22 +272,19 @@ const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onLoginClick 
               ))}
             </div>
           </div>
+
           {/* Call to Action */}
           <div className="text-center mt-12">
             <p className="text-lg text-gray-600 mb-6">
               Have a similar experience? Your voice can make a difference.
             </p>
-            <Link
-              to="/user-landing"
-              className="bg-safaricom-green hover:bg-safaricom-green/90 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 inline-flex items-center space-x-2"
-            >
+            <button className="bg-safaricom-green hover:bg-safaricom-green/90 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 inline-flex items-center space-x-2">
               <MessageSquare className="w-5 h-5" />
               <span>Share Your Experience</span>
-            </Link>
+            </button>
           </div>
         </div>
       </section>
-
       {/* Features Section */}
       <section id="features" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -343,18 +299,41 @@ const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onLoginClick 
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[...features, ...features2].map((feature, index) => (
-              <div key={index} className="text-center p-6 rounded-xl hover:shadow-lg transition-all transform hover:-translate-y-1">
-                <div className="w-16 h-16 bg-safaricom-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <feature.icon className="w-8 h-8 text-safaricom-green" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+            <div className="text-center p-6 rounded-xl hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div className="w-16 h-16 bg-safaricom-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageSquare className="w-8 h-8 text-safaricom-green" />
               </div>
-            ))}
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Voice Your Concerns</h3>
+              <p className="text-gray-600 leading-relaxed">Report network issues, service problems, and provide feedback directly to Safaricom through our streamlined platform.</p>
+            </div>
+            
+            <div className="text-center p-6 rounded-xl hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div className="w-16 h-16 bg-safaricom-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <TrendingUp className="w-8 h-8 text-safaricom-green" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Track Resolution</h3>
+              <p className="text-gray-600 leading-relaxed">Monitor the progress of your complaints and see real-time updates on resolution status and estimated timelines.</p>
+            </div>
+            
+            <div className="text-center p-6 rounded-xl hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div className="w-16 h-16 bg-safaricom-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-safaricom-green" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Community Impact</h3>
+              <p className="text-gray-600 leading-relaxed">Join thousands of Kenyans making their voices heard and driving improvements in telecommunications services.</p>
+            </div>
+            
+            <div className="text-center p-6 rounded-xl hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div className="w-16 h-16 bg-safaricom-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-8 h-8 text-safaricom-green" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Location-Based Reports</h3>
+              <p className="text-gray-600 leading-relaxed">Help identify network gaps and service issues across different regions in Kenya for targeted improvements.</p>
+            </div>
           </div>
         </div>
       </section>
+
       {/* Stats Section */}
       <section id="stats" className="py-20 bg-safaricom-green">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -368,101 +347,27 @@ const EnhancedLandingPage: React.FC<EnhancedLandingPageProps> = ({ onLoginClick 
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-5xl font-bold text-white mb-2">{stat.number}</div>
-                <div className="text-green-100 text-lg">{stat.label}</div>
-              </div>
-            ))}
+            <div className="text-center">
+              <div className="text-5xl font-bold text-white mb-2">10,000+</div>
+              <div className="text-green-100 text-lg">Reports Submitted</div>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl font-bold text-white mb-2">85%</div>
+              <div className="text-green-100 text-lg">Resolution Rate</div>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl font-bold text-white mb-2">47</div>
+              <div className="text-green-100 text-lg">Counties Covered</div>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl font-bold text-white mb-2">24/7</div>
+              <div className="text-green-100 text-lg">Support Available</div>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Ready to Make Your Voice Heard?
-          </h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Join thousands of Kenyans who are actively improving telecommunications services 
-            through the SEMA platform. Your feedback drives real change.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <Link
-              to="/user-landing"
-              className="bg-safaricom-green hover:bg-safaricom-green/90 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 flex items-center space-x-2"
-            >
-              <MessageSquare className="w-5 h-5" />
-              <span>Submit a Report</span>
-            </Link>
-            <Link
-              to="/dashboard"
-              className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg transition-all flex items-center space-x-2"
-            >
-              <TrendingUp className="w-5 h-5" />
-              <span>View Live Dashboard</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-      {/* Footer */}
-      <footer id="contact" className="bg-gray-50 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="col-span-2">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-safaricom-green rounded-lg flex items-center justify-center">
-                  <Phone className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">SEMA</h3>
-                  <p className="text-sm text-gray-600">Voice of the Customer</p>
-                </div>
-              </div>
-              <p className="text-gray-600 mb-4 leading-relaxed">
-                Empowering Kenyan voices to drive improvements in telecommunications services 
-                through transparent reporting, tracking, and community engagement.
-              </p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-safaricom-green transition-colors">
-                  <span className="sr-only">Twitter</span>
-                  <MessageSquare className="w-6 h-6" />
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-4">Platform</h4>
-              <ul className="space-y-2 text-gray-600">
-                <li><Link to="/user-landing" className="hover:text-safaricom-green transition-colors">Submit Report</Link></li>
-                <li><Link to="/dashboard" className="hover:text-safaricom-green transition-colors">Dashboard</Link></li>
-                <li><Link to="/analytics" className="hover:text-safaricom-green transition-colors">Analytics</Link></li>
-                <li><a href="#features" className="hover:text-safaricom-green transition-colors">Features</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-600">
-                <li><a href="#" className="hover:text-safaricom-green transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-safaricom-green transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-safaricom-green transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-safaricom-green transition-colors">Terms of Service</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-600">
-            <p>&copy; {new Date().getFullYear()} SEMA - Voice of the Customer. All rights reserved.</p>
-            <p className="mt-2 text-sm">
-              Built to amplify Kenyan voices and improve telecommunications services nationwide.
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
 
-export default EnhancedLandingPage
+export default SimpleLandingPage
