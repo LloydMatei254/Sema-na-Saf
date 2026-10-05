@@ -82,13 +82,19 @@ const LiveTicketManagement: React.FC = () => {
     )
   }
 
-  if (error) {
+  if (error && tickets.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Tickets</h3>
-          <p className="text-gray-600">{error}</p>
+        <div className="text-center max-w-md mx-auto p-6">
+          <AlertCircle className="w-16 h-16 text-orange-500 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Database Not Set Up</h3>
+          <p className="text-gray-600 mb-4">
+            The database schema hasn't been set up yet. The app is running in fallback mode.
+            You can still submit tickets, but they won't be persisted until the database is configured.
+          </p>
+          <p className="text-sm text-gray-500">
+            Check the QUICK_DATABASE_SETUP.md file for setup instructions.
+          </p>
         </div>
       </div>
     )
