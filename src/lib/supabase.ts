@@ -1,77 +1,83 @@
 import { createClient } from '@supabase/supabase-js'
-import { Database } from '../types/database'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Environment variables with fallbacks
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key'
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables:', {
-    url: !!supabaseUrl,
-    key: !!supabaseAnonKey
-  })
-  
-  // Create a mock client for fallback
-  const mockClient = {
+// Simple check for valid environment variables
+const hasValidEnvVars = supabaseUrl !== 'https://placeholder.supabase.co' && supabaseAnonKey !== 'placeholder-key'
+
+if (!hasValidEnvVars) {
+  console.warn('⚠️  Supabase environment variables not configured, using fallback mode')
+}
+
+// Create Supabase client with error handling
+let supabaseClient: any
+
+try {
+  if (hasValidEnvVars) {
+    supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true
+      }
+    })
+  } else {
+    // Fallback mock client
+    supabaseClient = createMockClient()
+  }
+} catch (error) {
+  console.warn('Failed to create Supabase client, using mock client:', error)
+  supabaseClient = createMockClient()
+}
+
+function createMockClient() {
+  return {
     auth: {
       getSession: () => Promise.resolve({ data: { session: null }, error: null }),
       onAuthStateChange: () => ({
         data: { subscription: { unsubscribe: () => {} } }
       }),
-      signInWithPassword: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
-      signUp: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
+      signInWithPassword: () => Promise.resolve({ 
+        data: { user: null }, 
+        error: { message: 'Demo mode - authentication disabled' } 
+      }),
+      signUp: () => Promise.resolve({ 
+        data: { user: null }, 
+        error: { message: 'Demo mode - registration disabled' } 
+      }),
       signOut: () => Promise.resolve({ error: null }),
       getUser: () => Promise.resolve({ data: { user: null }, error: null })
     },
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          single: () => Promise.resolve({ data: null, error: { message: 'Database not configured' } }),
+    from: (table: string) => ({
+      select: (columns?: string) => ({
+        eq: (column: string, value: any) => ({
+          single: () => Promise.resolve({ data: null, error: { message: 'Demo mode - database disabled' } }),
           order: () => Promise.resolve({ data: [], error: null })
         }),
         order: () => Promise.resolve({ data: [], error: null }),
-        insert: () => ({
+        limit: () => Promise.resolve({ data: [], error: null })
+      }),
+      insert: (data: any) => ({
+        select: () => ({
+          single: () => Promise.resolve({ data: null, error: { message: 'Demo mode - database disabled' } })
+        })
+      }),
+      update: (data: any) => ({
+        eq: (column: string, value: any) => ({
           select: () => ({
-            single: () => Promise.resolve({ data: null, error: { message: 'Database not configured' } })
-          })
-        }),
-        update: () => ({
-          eq: () => ({
-            select: () => ({
-              single: () => Promise.resolve({ data: null, error: { message: 'Database not configured' } })
-            })
+            single: () => Promise.resolve({ data: null, error: { message: 'Demo mode - database disabled' } })
           })
         })
       })
     }),
-    channel: () => ({
-      on: () => ({
-        subscribe: () => ({})
+    channel: (name: string) => ({
+      on: (event: string, config: any, callback: Function) => ({
+        subscribe: () => ({ unsubscribe: () => {} })
       })
     })
   }
-  
-  // Export mock client
-  export const supabase = mockClient as any
-} else {
-  // Export real client
-  export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true
-    },
-    realtime: {
-      params: {
-        eventsPerSecond: 2
-      }
-    }
-  })
 }
 
-// Admin client for server-side operations (Edge Functions)
-// Note: This is for server-side use only (Edge Functions)
-export const createAdminClient = () => {
-  // This will be used in Edge Functions where process.env is available
-  // For client-side, we don't use service role key
-  throw new Error('Admin client should only be used in server-side Edge Functions')
-}
+export const supabase = supabaseClient
