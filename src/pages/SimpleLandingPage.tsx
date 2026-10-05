@@ -183,7 +183,7 @@ const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) =
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-safaricom-green rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
                 <Phone className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -193,19 +193,19 @@ const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) =
             </div>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-safaricom-green transition-colors">Features</a>
-              <a href="#complaints" className="text-gray-600 hover:text-safaricom-green transition-colors">Real Issues</a>
-              <a href="#stats" className="text-gray-600 hover:text-safaricom-green transition-colors">Impact</a>
+              <a href="#features" className="text-gray-600 hover:text-green-600 transition-colors">Features</a>
+              <a href="#complaints" className="text-gray-600 hover:text-green-600 transition-colors">Real Issues</a>
+              <a href="#stats" className="text-gray-600 hover:text-green-600 transition-colors">Impact</a>
             </nav>
 
             <div className="flex items-center space-x-4">
               <button
                 onClick={onLoginClick}
-                className="text-gray-600 hover:text-safaricom-green font-medium transition-colors"
+                className="text-gray-600 hover:text-green-600 font-medium transition-colors"
               >
                 Sign In
               </button>
-              <button className="bg-safaricom-green hover:bg-safaricom-green/90 text-white px-6 py-2 rounded-lg font-medium transition-all">
+              <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-all">
                 Report Issue
               </button>
             </div>
@@ -214,24 +214,52 @@ const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) =
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-safaricom-green/10 via-white to-blue-50 py-20">
+      <section className="relative bg-gradient-to-br from-green-50 via-white to-blue-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Your Voice Matters,
-              <span className="text-safaricom-green"> Kenya Listens</span>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              Research. Review. Resolve.
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-              Join thousands of Kenyans reporting telecommunications issues, tracking resolutions, 
-              and driving improvements in network coverage and customer service across the country.
+            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              Make informed decisions about telecommunications services in Kenya. 
+              Read authentic reviews, access consumer research, and get expert guidance.
             </p>
+            
+            {/* Search Bar */}
+            <div className="max-w-2xl mx-auto mb-8">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search services, reviews, or consumer guides..."
+                  className="w-full pl-12 pr-4 py-4 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent shadow-sm"
+                />
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                  Search
+                </button>
+              </div>
+            </div>
+
+            {/* Trending Topics */}
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              <span className="text-sm text-gray-500 mr-3">Trending:</span>
+              {trendingTopics.slice(0, 4).map((topic, index) => (
+                <button
+                  key={index}
+                  className="text-sm bg-gray-100 hover:bg-green-600 hover:text-white text-gray-700 px-3 py-1 rounded-full transition-colors"
+                >
+                  {topic}
+                </button>
+              ))}
+            </div>
+            
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-              <button className="bg-safaricom-green hover:bg-safaricom-green/90 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 flex items-center space-x-2 shadow-lg">
+              <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 flex items-center space-x-2 shadow-lg">
                 <MessageSquare className="w-5 h-5" />
                 <span>Submit Your Report</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
-              <button className="border-2 border-safaricom-green text-safaricom-green hover:bg-safaricom-green hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all flex items-center space-x-2">
+              <button className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all flex items-center space-x-2">
                 <TrendingUp className="w-5 h-5" />
                 <span>View Dashboard</span>
               </button>
@@ -240,7 +268,7 @@ const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) =
         </div>
         
         {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-safaricom-green/20 rounded-full animate-bounce"></div>
+        <div className="absolute top-20 left-10 w-20 h-20 bg-green-200 rounded-full animate-bounce"></div>
         <div className="absolute bottom-20 right-10 w-32 h-32 bg-blue-200/30 rounded-full animate-pulse"></div>
       </section>
       {/* Real Customer Complaints Gallery */}
@@ -286,7 +314,7 @@ const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) =
                 <div className="flex items-start space-x-6">
                   {/* Profile Section */}
                   <div className="flex-shrink-0">
-                    <div className="w-16 h-16 bg-safaricom-green rounded-full flex items-center justify-center">
+                    <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center">
                       <span className="text-white font-bold text-xl">
                         {customerComplaints[currentComplaint].name.split(' ').map(n => n[0]).join('')}
                       </span>
@@ -339,7 +367,7 @@ const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) =
                       {customerComplaints[currentComplaint].hashtags.map((tag, index) => (
                         <span
                           key={index}
-                          className="text-safaricom-green font-medium text-sm hover:bg-safaricom-green/10 px-2 py-1 rounded transition-colors"
+                          className="text-green-600 font-medium text-sm hover:bg-green-100 px-2 py-1 rounded transition-colors"
                         >
                           {tag}
                         </span>
@@ -358,7 +386,7 @@ const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) =
                   onClick={() => setCurrentComplaint(index)}
                   className={`w-3 h-3 rounded-full transition-all ${
                     index === currentComplaint 
-                      ? 'bg-safaricom-green scale-125' 
+                      ? 'bg-green-600 scale-125' 
                       : 'bg-gray-300 hover:bg-gray-400'
                   }`}
                 />
@@ -371,7 +399,7 @@ const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) =
             <p className="text-lg text-gray-600 mb-6">
               Have a similar experience? Your voice can make a difference.
             </p>
-            <button className="bg-safaricom-green hover:bg-safaricom-green/90 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 inline-flex items-center space-x-2">
+            <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 inline-flex items-center space-x-2">
               <MessageSquare className="w-5 h-5" />
               <span>Share Your Experience</span>
             </button>
@@ -393,32 +421,32 @@ const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) =
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center p-6 rounded-xl hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div className="w-16 h-16 bg-safaricom-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageSquare className="w-8 h-8 text-safaricom-green" />
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageSquare className="w-8 h-8 text-green-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Voice Your Concerns</h3>
               <p className="text-gray-600 leading-relaxed">Report network issues, service problems, and provide feedback directly to Safaricom through our streamlined platform.</p>
             </div>
             
             <div className="text-center p-6 rounded-xl hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div className="w-16 h-16 bg-safaricom-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-8 h-8 text-safaricom-green" />
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <TrendingUp className="w-8 h-8 text-green-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Track Resolution</h3>
               <p className="text-gray-600 leading-relaxed">Monitor the progress of your complaints and see real-time updates on resolution status and estimated timelines.</p>
             </div>
             
             <div className="text-center p-6 rounded-xl hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div className="w-16 h-16 bg-safaricom-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-safaricom-green" />
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-green-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Community Impact</h3>
               <p className="text-gray-600 leading-relaxed">Join thousands of Kenyans making their voices heard and driving improvements in telecommunications services.</p>
             </div>
             
             <div className="text-center p-6 rounded-xl hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div className="w-16 h-16 bg-safaricom-green/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="w-8 h-8 text-safaricom-green" />
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-8 h-8 text-green-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Location-Based Reports</h3>
               <p className="text-gray-600 leading-relaxed">Help identify network gaps and service issues across different regions in Kenya for targeted improvements.</p>
@@ -428,7 +456,7 @@ const SimpleLandingPage: React.FC<SimpleLandingPageProps> = ({ onLoginClick }) =
       </section>
 
       {/* Stats Section */}
-      <section id="stats" className="py-20 bg-safaricom-green">
+      <section id="stats" className="py-20 bg-green-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">
