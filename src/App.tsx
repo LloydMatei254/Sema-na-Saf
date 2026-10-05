@@ -41,11 +41,11 @@ const AppContent: React.FC = () => {
   if (profile?.role === 'ADMIN') {
     return (
       <FilterProvider>
-        <LiveTicketManagement />
+        <Dashboard />
       </FilterProvider>
     )
   } else {
-    return <LiveTicketManagement />
+    return <UserLandingPage />
   }
 }
 
