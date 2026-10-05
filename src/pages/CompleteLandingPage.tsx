@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ArrowRight, Phone, MessageSquare, TrendingUp, Users, MapPin, Search, Star, Shield, Award, CheckCircle, Zap, BookOpen, BarChart3, Mail, Globe, Clock } from 'lucide-react'
+import TicketSubmissionForm from '../components/TicketSubmissionForm'
 
 // Service categories for consumer issues
 const serviceCategories = [
@@ -122,6 +123,58 @@ interface CompleteLandingPageProps {
 }
 
 const CompleteLandingPage: React.FC<CompleteLandingPageProps> = ({ onLoginClick }) => {
+  const [showTicketForm, setShowTicketForm] = useState(false)
+
+  if (showTicketForm) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="bg-white shadow-sm border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-4">
+              <button 
+                onClick={() => setShowTicketForm(false)}
+                className="flex items-center space-x-3"
+              >
+                <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+                  <Phone className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900">SEMA</h1>
+                  <p className="text-xs text-gray-600">Consumer Advocacy Platform</p>
+                </div>
+              </button>
+              
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={onLoginClick}
+                  className="text-gray-600 hover:text-green-600 font-medium transition-colors"
+                >
+                  Sign In
+                </button>
+                <button 
+                  onClick={() => setShowTicketForm(false)}
+                  className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-6 py-2 rounded-lg font-medium transition-all"
+                >
+                  Back to Home
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Ticket Form Section */}
+        <section className="py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <TicketSubmissionForm onSubmitSuccess={() => {
+              // Could redirect to a thank you page or show success message
+              setTimeout(() => setShowTicketForm(false), 3000)
+            }} />
+          </div>
+        </section>
+      </div>
+    )
+  }
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -152,7 +205,10 @@ const CompleteLandingPage: React.FC<CompleteLandingPageProps> = ({ onLoginClick 
               >
                 Sign In
               </button>
-              <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-all">
+              <button 
+                onClick={() => setShowTicketForm(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-all"
+              >
                 Report Issue
               </button>
             </div>
@@ -201,12 +257,18 @@ const CompleteLandingPage: React.FC<CompleteLandingPageProps> = ({ onLoginClick 
             </div>
             
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-              <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 flex items-center space-x-2 shadow-lg">
+              <button 
+                onClick={() => setShowTicketForm(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 flex items-center space-x-2 shadow-lg"
+              >
                 <MessageSquare className="w-5 h-5" />
                 <span>Submit Your Report</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
-              <button className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all flex items-center space-x-2">
+              <button 
+                onClick={onLoginClick}
+                className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all flex items-center space-x-2"
+              >
                 <TrendingUp className="w-5 h-5" />
                 <span>View Dashboard</span>
               </button>
@@ -313,7 +375,10 @@ const CompleteLandingPage: React.FC<CompleteLandingPageProps> = ({ onLoginClick 
           </div>
 
           <div className="text-center mt-12">
-            <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 inline-flex items-center space-x-2">
+            <button 
+              onClick={() => setShowTicketForm(true)}
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 inline-flex items-center space-x-2"
+            >
               <MessageSquare className="w-5 h-5" />
               <span>Share Your Experience</span>
             </button>

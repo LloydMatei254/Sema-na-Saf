@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { useAuth } from '../contexts/AuthContext'
+import { useTickets } from '../hooks/useTickets'
+import { useAnalyticsData } from '../hooks/useAnalyticsData'
 import Header from '../components/Header'
 import Navigation from '../components/Navigation'
 import FilterBar from '../components/FilterBar'
