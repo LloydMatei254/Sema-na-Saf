@@ -11,7 +11,7 @@ const Login: React.FC<LoginProps> = ({ onBackClick }) => {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
-  const { login, loading } = useAuth()
+  const { signIn, loading } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,9 +22,13 @@ const Login: React.FC<LoginProps> = ({ onBackClick }) => {
       return
     }
 
-    const success = await login(email, password)
-    if (!success) {
-      setError('Invalid email or password')
+    try {
+      const { user, error } = await signIn(email, password)
+      if (error) {
+        setError(error.message || 'Invalid email or password')
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.')
     }
   }
 
@@ -49,6 +53,15 @@ const Login: React.FC<LoginProps> = ({ onBackClick }) => {
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Sema Dashboard</h1>
           <p className="text-gray-600">Sign in to access your account</p>
+          
+          {/* Demo Credentials */}
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">Demo Accounts:</h4>
+            <div className="text-xs text-blue-700 space-y-1">
+              <p><strong>Admin:</strong> admin@sema.co.ke / admin123</p>
+              <p><strong>User:</strong> user@sema.co.ke / user123</p>
+            </div>
+          </div>
         </div>
 
         {/* Login Form */}
@@ -132,12 +145,32 @@ const Login: React.FC<LoginProps> = ({ onBackClick }) => {
             </button>
           </form>
 
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h4 className="text-sm font-medium text-gray-900 mb-2">Demo Credentials:</h4>
-            <div className="text-xs text-gray-600 space-y-1">
-              <div><strong>Admin:</strong> admin@safaricom.co.ke / admin123</div>
-              <div><strong>User:</strong> user@example.com / user123</div>
+          {/* Quick Login Buttons */}
+          <div className="mt-6 space-y-3">
+            <h4 className="text-sm font-medium text-gray-900 text-center">Quick Login (Demo):</h4>
+            <div className="grid grid-cols-1 gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('admin@sema.co.ke')
+                  setPassword('admin123')
+                }}
+                disabled={loading}
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+              >
+                Login as Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('user@sema.co.ke')
+                  setPassword('user123')
+                }}
+                disabled={loading}
+                className="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50"
+              >
+                Login as User
+              </button>
             </div>
           </div>
         </div>

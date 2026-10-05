@@ -10,7 +10,7 @@ import './App.css'
 
 // Main App Content Component
 const AppContent: React.FC = () => {
-  const { user, isAuthenticated, loading } = useAuth()
+  const { user, profile, isAuthenticated, loading } = useAuth()
   const [showLogin, setShowLogin] = useState(false)
 
   if (loading) {
@@ -37,7 +37,7 @@ const AppContent: React.FC = () => {
   }
 
   // Route based on user role after authentication
-  if (user?.role === 'admin') {
+  if (profile?.role === 'ADMIN') {
     return (
       <FilterProvider>
         <Dashboard />

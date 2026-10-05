@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../services/supabase'
+import { supabase } from '../lib/supabase'
 import { User, Session } from '@supabase/supabase-js'
 
 export function useAuth() {
@@ -66,6 +66,55 @@ export function useAuth() {
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true)
+      
+      // Demo authentication for testing
+      if (email === 'admin@sema.co.ke' && password === 'admin123') {
+        const demoAdmin = {
+          id: 'demo-admin-1',
+          email: 'admin@sema.co.ke',
+          user_metadata: {
+            full_name: 'Admin User'
+          }
+        }
+        const demoProfile = {
+          id: 'demo-admin-profile',
+          user_id: 'demo-admin-1',
+          full_name: 'Admin User',
+          role: 'ADMIN',
+          phone: '+254700000000',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+        
+        setUser(demoAdmin)
+        setProfile(demoProfile)
+        return { user: demoAdmin, error: null }
+      }
+      
+      if (email === 'user@sema.co.ke' && password === 'user123') {
+        const demoUser = {
+          id: 'demo-user-1',
+          email: 'user@sema.co.ke',
+          user_metadata: {
+            full_name: 'Regular User'
+          }
+        }
+        const demoProfile = {
+          id: 'demo-user-profile',
+          user_id: 'demo-user-1',
+          full_name: 'Regular User',
+          role: 'CUSTOMER',
+          phone: '+254700000001',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+        
+        setUser(demoUser)
+        setProfile(demoProfile)
+        return { user: demoUser, error: null }
+      }
+      
+      // Try Supabase authentication for real accounts
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
