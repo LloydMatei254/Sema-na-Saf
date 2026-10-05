@@ -36,7 +36,7 @@ const LiveTicketManagement: React.FC = () => {
     return matchesSearch && matchesStatus && matchesCategory
   })
 
-  const handleStatusUpdate = async (ticketId: string, newStatus: Ticket['status']) => {
+  const handleStatusUpdate = async (ticketId: string, newStatus: string) => {
     if (!isAdmin()) return
     
     setUpdating(ticketId)

@@ -12,12 +12,7 @@ const categories = [
   'Digital Services'
 ]
 
-const priorities: Array<'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'> = [
-  'LOW',
-  'MEDIUM', 
-  'HIGH',
-  'CRITICAL'
-]
+const priorities = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']
 
 const counties = [
   'Nairobi', 'Mombasa', 'Kiambu', 'Nakuru', 'Machakos', 'Kajiado',
@@ -194,7 +189,7 @@ const TicketSubmissionForm: React.FC<TicketSubmissionFormProps> = ({ onSubmitSuc
             <select
               id="priority"
               value={formData.priority}
-              onChange={(e) => handleChange('priority', e.target.value as CreateTicketData['priority'])}
+              onChange={(e) => handleChange('priority', e.target.value as string)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
             >
               {priorities.map((priority) => (

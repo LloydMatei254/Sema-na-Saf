@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signUp: auth.signUp,
     signOut: auth.signOut,
     updateProfile: auth.updateProfile,
-    isAdmin: auth.isAdmin,
+    isAdmin: () => Boolean(auth.isAdmin()),
     refetchProfile: auth.refetchProfile
   }
 

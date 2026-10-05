@@ -3,15 +3,13 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { FilterProvider } from './contexts/FilterContext'
 import Login from './components/Login'
-import Dashboard from './pages/Dashboard'
 import LiveTicketManagement from './pages/LiveTicketManagement'
-import UserLandingPage from './pages/UserLandingPage'
 import CompleteLandingPage from './pages/CompleteLandingPage'
 import './App.css'
 
 // Main App Content Component
 const AppContent: React.FC = () => {
-  const { user, profile, isAuthenticated, loading } = useAuth()
+  const { profile, isAuthenticated, loading } = useAuth()
   const [showLogin, setShowLogin] = useState(false)
 
   if (loading) {

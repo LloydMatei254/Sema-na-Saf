@@ -35,7 +35,7 @@ export function useTickets() {
     }
   }
 
-  const updateTicketStatus = async (ticketId: string, status: Ticket['status'], assignedTo?: string) => {
+  const updateTicketStatus = async (ticketId: string, status: string, assignedTo?: string) => {
     try {
       const result = await ticketsService.updateTicketStatus(ticketId, status, assignedTo)
       

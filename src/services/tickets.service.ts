@@ -5,8 +5,8 @@ export interface Ticket {
   title: string
   description: string
   category: string
-  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
-  status: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED'
+  priority: string
+  status: string
   user_id: string
   assigned_to?: string
   location?: string
@@ -20,7 +20,7 @@ export interface CreateTicketData {
   title: string
   description: string
   category: string
-  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
+  priority: string
   location?: string
   county?: string
 }
@@ -135,7 +135,7 @@ export const ticketsService = {
   },
 
   // Update ticket status
-  async updateTicketStatus(ticketId: string, status: Ticket['status'], assignedTo?: string) {
+  async updateTicketStatus(ticketId: string, status: string, assignedTo?: string) {
     try {
       const updateData: any = { status, updated_at: new Date().toISOString() }
       

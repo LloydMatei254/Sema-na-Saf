@@ -7,7 +7,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle }) => {
-  const { user, logout } = useAuth()
+  const { user, signOut } = useAuth()
 
   return (
     <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 shadow-sm">
