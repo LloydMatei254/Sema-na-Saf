@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode } from 'react'
-import { useAuth as useSupabaseAuth } from '../hooks/useAuth'
+import { useAuth as useSupabaseAuth } from '../hooks/useAuthSimple'
 
 interface AuthContextType {
   user: any | null
