@@ -51,7 +51,9 @@ export default {
           white: '#FFFFFF',
           lightGreen: '#E8F5E8',
           darkGreen: '#006B36',
-        }
+        },
+        'safaricom-green': '#00A651',
+        'safaricom-red': '#E60012',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
