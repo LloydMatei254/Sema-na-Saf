@@ -1,7 +1,100 @@
 import React, { useState, useEffect } from 'react'
-import { ArrowRight, Phone, MessageSquare, TrendingUp, Users, MapPin, Clock, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react'
+import { ArrowRight, Phone, MessageSquare, TrendingUp, Users, MapPin, Clock, ChevronLeft, ChevronRight, Play, Pause, Search, Star, Shield, Award, CheckCircle, AlertTriangle, Filter, Zap, BookOpen, BarChart3 } from 'lucide-react'
 
-// Real customer complaints data based on the social media posts
+// Service categories for consumer issues
+const serviceCategories = [
+  {
+    name: "Mobile Network",
+    description: "Coverage, call quality, data speed issues",
+    icon: Phone,
+    reviewCount: 2847,
+    avgRating: 3.2,
+    color: "bg-blue-500"
+  },
+  {
+    name: "M-Pesa Services", 
+    description: "Transaction failures, delays, fraud reports",
+    icon: Shield,
+    reviewCount: 1923,
+    avgRating: 4.1,
+    color: "bg-green-600"
+  },
+  {
+    name: "Customer Care",
+    description: "Support response times, resolution quality",
+    icon: MessageSquare, 
+    reviewCount: 1456,
+    avgRating: 2.8,
+    color: "bg-purple-500"
+  },
+  {
+    name: "Billing & Plans",
+    description: "Charges, plan changes, billing disputes", 
+    icon: BarChart3,
+    reviewCount: 1234,
+    avgRating: 3.5,
+    color: "bg-orange-500"
+  },
+  {
+    name: "Internet Services",
+    description: "Home fiber, business internet solutions",
+    icon: Zap,
+    reviewCount: 987,
+    avgRating: 3.8,
+    color: "bg-indigo-500"
+  },
+  {
+    name: "Digital Services",
+    description: "Apps, online platforms, digital products",
+    icon: BookOpen,
+    reviewCount: 756,
+    avgRating: 3.4,
+    color: "bg-teal-500"
+  }
+]
+
+// Featured consumer insights
+const consumerInsights = [
+  {
+    title: "Network Coverage Report 2024",
+    excerpt: "Comprehensive analysis of mobile network performance across Kenya's 47 counties",
+    author: "SEMA Research Team",
+    readTime: "8 min read",
+    category: "Research",
+    featured: true
+  },
+  {
+    title: "M-Pesa Security: What Consumers Need to Know", 
+    excerpt: "Essential tips to protect yourself from mobile money fraud and scams",
+    author: "Consumer Protection Desk",
+    readTime: "5 min read",
+    category: "Safety"
+  },
+  {
+    title: "Rural Connectivity Gaps: A County-by-County Analysis",
+    excerpt: "Identifying underserved areas and tracking infrastructure improvements",
+    author: "Infrastructure Team",
+    readTime: "12 min read", 
+    category: "Analysis"
+  },
+  {
+    title: "Customer Service Excellence Awards 2024",
+    excerpt: "Recognizing outstanding service delivery and consumer satisfaction",
+    author: "Awards Committee",
+    readTime: "6 min read",
+    category: "Recognition"
+  }
+]
+
+// Trending consumer topics
+const trendingTopics = [
+  "5G Network Rollout",
+  "Data Bundle Transparency", 
+  "Rural Coverage Expansion",
+  "Mobile Money Security",
+  "Customer Service Standards",
+  "Digital Inclusion Initiatives"
+]
 const customerComplaints = [
   {
     id: 1,
