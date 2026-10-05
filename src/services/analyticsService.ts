@@ -285,19 +285,12 @@ export class AnalyticsService {
     }
   }
 
-  // Subscribe to analytics changes
+  // Subscribe to analytics changes - DISABLED to fix realtime error
   static subscribeToAnalytics(callback: (payload: any) => void) {
-    return supabase
-      .channel('analytics_changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'reports'
-        },
-        callback
-      )
-      .subscribe()
+    // Temporarily disabled to prevent realtime subscription errors
+    console.log('Analytics subscription disabled')
+    return {
+      unsubscribe: () => {}
+    }
   }
 }

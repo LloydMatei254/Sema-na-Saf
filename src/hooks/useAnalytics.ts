@@ -26,15 +26,15 @@ export function useDashboardSummary() {
   useEffect(() => {
     fetchSummary()
 
-    // Subscribe to real-time updates
-    const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
-      console.log('Real-time analytics update:', payload)
-      fetchSummary()
-    })
+    // Real-time updates temporarily disabled to prevent subscription errors
+    // const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
+    //   console.log('Real-time analytics update:', payload)
+    //   fetchSummary()
+    // })
 
-    return () => {
-      subscription.unsubscribe()
-    }
+    // return () => {
+    //   subscription.unsubscribe()
+    // }
   }, [])
 
   return {
@@ -67,15 +67,15 @@ export function useCountyAnalytics() {
   useEffect(() => {
     fetchCounties()
 
-    // Subscribe to real-time updates
-    const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
-      console.log('Real-time county analytics update:', payload)
-      fetchCounties()
-    })
+    // Real-time updates temporarily disabled to prevent subscription errors
+    // const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
+    //   console.log('Real-time county analytics update:', payload)
+    //   fetchCounties()
+    // })
 
-    return () => {
-      subscription.unsubscribe()
-    }
+    // return () => {
+    //   subscription.unsubscribe()
+    // }
   }, [])
 
   return {
@@ -111,15 +111,15 @@ export function useHourlyData() {
     // Refresh hourly data every 5 minutes
     const interval = setInterval(fetchHourlyData, 5 * 60 * 1000)
 
-    // Subscribe to real-time updates
-    const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
-      console.log('Real-time hourly data update:', payload)
-      fetchHourlyData()
-    })
+    // Real-time updates temporarily disabled to prevent subscription errors
+    // const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
+    //   console.log('Real-time hourly data update:', payload)
+    //   fetchHourlyData()
+    // })
 
     return () => {
       clearInterval(interval)
-      subscription.unsubscribe()
+      // subscription.unsubscribe()
     }
   }, [])
 
@@ -153,15 +153,15 @@ export function useCategoryDistribution() {
   useEffect(() => {
     fetchCategories()
 
-    // Subscribe to real-time updates
-    const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
-      console.log('Real-time category distribution update:', payload)
-      fetchCategories()
-    })
+    // Real-time updates temporarily disabled to prevent subscription errors
+    // const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
+    //   console.log('Real-time category distribution update:', payload)
+    //   fetchCategories()
+    // })
 
-    return () => {
-      subscription.unsubscribe()
-    }
+    // return () => {
+    //   subscription.unsubscribe()
+    // }
   }, [])
 
   return {
@@ -194,15 +194,15 @@ export function useDailyTrends() {
   useEffect(() => {
     fetchTrends()
 
-    // Subscribe to real-time updates
-    const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
-      console.log('Real-time daily trends update:', payload)
-      fetchTrends()
-    })
+    // Real-time updates temporarily disabled to prevent subscription errors
+    // const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
+    //   console.log('Real-time daily trends update:', payload)
+    //   fetchTrends()
+    // })
 
-    return () => {
-      subscription.unsubscribe()
-    }
+    // return () => {
+    //   subscription.unsubscribe()
+    // }
   }, [])
 
   return {
@@ -238,15 +238,15 @@ export function usePerformanceMetrics() {
     // Refresh metrics every 2 minutes
     const interval = setInterval(fetchMetrics, 2 * 60 * 1000)
 
-    // Subscribe to real-time updates
-    const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
-      console.log('Real-time performance metrics update:', payload)
-      fetchMetrics()
-    })
+    // Real-time updates temporarily disabled to prevent subscription errors
+    // const subscription = AnalyticsService.subscribeToAnalytics((payload) => {
+    //   console.log('Real-time performance metrics update:', payload)
+    //   fetchMetrics()
+    // })
 
     return () => {
       clearInterval(interval)
-      subscription.unsubscribe()
+      // subscription.unsubscribe()
     }
   }, [])
 
