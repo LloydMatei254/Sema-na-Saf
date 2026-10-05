@@ -1,0 +1,4 @@
+Deployment trigger file - forces fresh build with latest commit
+Current commit: e1e44d4
+Build should use this commit, not fb52b84
+Created: 2026-10-05 22:14 UTC
