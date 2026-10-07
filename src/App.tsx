@@ -5,12 +5,68 @@ import { FilterProvider } from './contexts/FilterContext'
 import Login from './components/Login'
 import GovDashboard from './pages/GovDashboard'
 import CompleteLandingPage from './pages/CompleteLandingPage'
+import ErrorBoundary from './components/ErrorBoundary'
 import './App.css'
 
 // Main App Content Component
 const AppContent: React.FC = () => {
   const { profile, isAuthenticated, loading } = useAuth()
   const [showLogin, setShowLogin] = useState(false)
+  const [appError, setAppError] = useState<string | null>(null)
+  const [forceShowLanding, setForceShowLanding] = useState(true)
+
+  // Error boundary effect
+  React.useEffect(() => {
+    const handleError = (error: ErrorEvent) => {
+      console.error('App Error:', error)
+      setAppError(error.message)
+    }
+
+    window.addEventListener('error', handleError)
+    
+    // Auto-hide loading after 3 seconds to prevent infinite loading
+    const timer = setTimeout(() => {
+      setForceShowLanding(false)
+    }, 3000)
+
+    return () => {
+      window.removeEventListener('error', handleError)
+      clearTimeout(timer)
+    }
+  }, [])
+
+  // If there's a critical error, show error page instead of blank screen
+  if (appError) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center p-8">
+          <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-white text-2xl">!</span>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Application Error</h2>
+          <p className="text-gray-600 mb-4">There was an error loading the application.</p>
+          <button 
+            onClick={() => {setAppError(null); window.location.reload()}} 
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          >
+            Reload Application
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Always show landing page first or if loading and force flag is true
+  if ((loading && forceShowLanding) || (!isAuthenticated && !showLogin)) {
+    return (
+      <CompleteLandingPage 
+        onLoginClick={() => {
+          setShowLogin(true)
+          setForceShowLanding(false)
+        }} 
+      />
+    )
+  }
 
   if (loading) {
     return (
@@ -23,11 +79,6 @@ const AppContent: React.FC = () => {
         </div>
       </div>
     )
-  }
-
-  // Show public landing page if not authenticated and login not requested
-  if (!isAuthenticated && !showLogin) {
-    return <CompleteLandingPage onLoginClick={() => setShowLogin(true)} />
   }
 
   // Show login page if login requested but not authenticated
@@ -49,11 +100,13 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </Router>
+    </ErrorBoundary>
   )
 }
 
