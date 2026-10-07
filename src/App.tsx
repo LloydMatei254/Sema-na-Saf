@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { FilterProvider } from './contexts/FilterContext'
 import Login from './components/Login'
-import LiveTicketManagement from './pages/LiveTicketManagement'
+import GovDashboard from './pages/GovDashboard'
 import CompleteLandingPage from './pages/CompleteLandingPage'
 import './App.css'
 
@@ -39,11 +39,11 @@ const AppContent: React.FC = () => {
   if (profile?.role === 'ADMIN') {
     return (
       <FilterProvider>
-        <LiveTicketManagement />
+        <GovDashboard />
       </FilterProvider>
     )
   } else {
-    return <LiveTicketManagement />
+    return <GovDashboard />
   }
 }
 
