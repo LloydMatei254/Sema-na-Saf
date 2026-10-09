@@ -722,43 +722,60 @@ const SEMADashboardComplete: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Simplified Map Grid */}
+              {/* Kenya Map */}
               <div className="lg:col-span-2">
-                <div className="grid grid-cols-4 gap-2">
-                  {countyData.slice(0, 20).map((county, index) => {
-                    const getValue = () => {
-                      if (mapTab === 'functional') return county.functionalRate
-                      if (mapTab === 'total') return county.total
-                      return county.workforce
-                    }
-                    const value = getValue()
-                    const maxValue = mapTab === 'functional' 
-                      ? 100 
-                      : Math.max(...countyData.map(c => mapTab === 'total' ? c.total : c.workforce))
-                    const intensity = (value / maxValue) * 100
-                    const bgColor = `rgba(37, 99, 235, ${Math.max(0.2, intensity / 100)})`
-                    
-                    return (
-                      <button
-                        key={county.county}
-                        onClick={() => setSelectedMapCounty(county.county)}
-                        className="aspect-square rounded border border-gray-200 hover:border-blue-500 transition-all flex items-center justify-center text-xs font-medium relative group"
-                        style={{ backgroundColor: bgColor }}
-                        title={county.county}
-                      >
-                        <span className="text-white drop-shadow-md">
-                          {county.county.substring(0, 3)}
-                        </span>
-                        
-                        {/* Tooltip */}
-                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
-                          {county.county}: {
-                            mapTab === 'functional' ? `${value.toFixed(1)}%` : value.toLocaleString()
-                          }
-                        </div>
-                      </button>
-                    )
-                  })}
+                <div className="relative rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
+                  <img 
+                    src="/images/kenya-map.jpg" 
+                    alt="Kenya Map showing all 47 counties" 
+                    className="w-full h-auto object-contain"
+                  />
+                  
+                  {/* Map Legend */}
+                  <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3">
+                    <p className="text-xs font-semibold text-gray-700 mb-2">
+                      {mapTab === 'functional' && 'Functional Rate'}
+                      {mapTab === 'total' && 'Total CHUs'}
+                      {mapTab === 'workforce' && 'Workforce'}
+                    </p>
+                    <div className="space-y-1 text-xs">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 bg-blue-700 rounded"></div>
+                        <span className="text-gray-600">High</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 bg-blue-400 rounded"></div>
+                        <span className="text-gray-600">Medium</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 bg-blue-200 rounded"></div>
+                        <span className="text-gray-600">Low</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Interactive Info */}
+                  <div className="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-2 text-xs text-gray-600">
+                    <p>Click a county on the map or select from the table below</p>
+                  </div>
+                </div>
+                
+                {/* Quick County Selector */}
+                <div className="mt-4 grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2">
+                  {countyData.slice(0, 16).map((county) => (
+                    <button
+                      key={county.county}
+                      onClick={() => setSelectedMapCounty(county.county)}
+                      className={`px-2 py-1 text-xs rounded border transition-colors ${
+                        selectedMapCounty === county.county
+                          ? 'bg-blue-600 text-white border-blue-600'
+                          : 'bg-white text-gray-700 border-gray-200 hover:border-blue-400'
+                      }`}
+                      title={county.county}
+                    >
+                      {county.county.substring(0, 3)}
+                    </button>
+                  ))}
                 </div>
               </div>
 
