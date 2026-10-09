@@ -19,30 +19,57 @@ import {
   Activity,
   Globe,
   Shield,
-  Award
+  Award,
+  Home,
+  Building2,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useTickets } from '../hooks/useTickets'
 
-// Mock data for government dashboard
+// Mock data for government dashboard - matching DHA structure
 const mockStats = {
-  totalTickets: 15420,
-  resolvedTickets: 13107,
-  activeTickets: 2313,
-  criticalTickets: 156,
-  resolutionRate: 85,
-  avgResolutionTime: 4.2,
-  countiesActive: 47,
-  monthlyGrowth: 12.5
+  totalServices: 15420,
+  functionalServices: 13107,
+  semiFunctionalServices: 1935,
+  nonFunctionalServices: 378,
+  closedServices: 520,
+  serviceProviders: 17499,
+  householdsCovered: 11900000
 }
 
 const countiesData = [
-  { name: 'Nairobi', tickets: 2840, resolved: 2456, rate: 86.5 },
-  { name: 'Mombasa', tickets: 1520, resolved: 1298, rate: 85.4 },
-  { name: 'Kisumu', tickets: 980, resolved: 834, rate: 85.1 },
-  { name: 'Nakuru', tickets: 1200, resolved: 1020, rate: 85.0 },
-  { name: 'Eldoret', tickets: 890, resolved: 756, rate: 84.9 },
-  { name: 'Machakos', tickets: 750, resolved: 630, rate: 84.0 }
+  { name: 'Laikipia', total: 181, functionalRate: 99, workforce: 45, households: 246235 },
+  { name: 'Tharaka-Nithi', total: 129, functionalRate: 98, workforce: 10, households: 65300 },
+  { name: 'Busia', total: 233, functionalRate: 98, workforce: 104, households: 225400 },
+  { name: 'Nyamira', total: 147, functionalRate: 97, workforce: 363, households: 185900 },
+  { name: 'Vihiga', total: 169, functionalRate: 96, workforce: 400, households: 167000 },
+  { name: 'Trans Nzoia', total: 237, functionalRate: 95, workforce: 350, households: 421500 },
+  { name: 'Lamu', total: 57, functionalRate: 95, workforce: 305, households: 36000 },
+  { name: 'Turkana', total: 333, functionalRate: 94, workforce: 608, households: 352200 },
+  { name: 'Nairobi City', total: 886, functionalRate: 76, workforce: 1200, households: 2840000 },
+  { name: 'Kiambu', total: 493, functionalRate: 85, workforce: 890, households: 1520000 },
+  { name: 'Kakanega', total: 436, functionalRate: 87, workforce: 756, households: 980000 },
+  { name: 'Nakuru', total: 414, functionalRate: 85, workforce: 630, households: 1200000 },
+  { name: 'Meru', total: 370, functionalRate: 84, workforce: 520, households: 890000 },
+  { name: 'Bungoma', total: 367, functionalRate: 82, workforce: 480, households: 750000 }
+]
+
+const topCounties = [
+  { name: 'Nairobi City', count: 886, percentage: 76 },
+  { name: 'Kiambu', count: 493, percentage: 4.2 },
+  { name: 'Kakanega', count: 436, percentage: 3.7 },
+  { name: 'Nakuru', count: 414, percentage: 3.5 },
+  { name: 'Meru', count: 370, percentage: 3.2 },
+  { name: 'Bungoma', count: 367, percentage: 3.1 }
+]
+
+const functionalityDistribution = [
+  { status: 'Functional', count: 8949, percentage: 76.9, color: '#2563eb' },
+  { status: 'Semi Functional', count: 1935, percentage: 16.6, color: '#f59e0b' },
+  { status: 'Non Functional', count: 239, percentage: 2.1, color: '#dc2626' },
+  { status: 'Closed', count: 520, percentage: 4.5, color: '#6b7280' }
 ]
 
 const recentActivities = [

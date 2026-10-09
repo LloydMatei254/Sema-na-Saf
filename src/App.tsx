@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { FilterProvider } from './contexts/FilterContext'
 import Login from './components/Login'
-import GovDashboard from './pages/GovDashboard'
+import SEMADashboard from './pages/SEMADashboard'
 import StandaloneDashboard from './pages/StandaloneDashboard'
 import CompleteLandingPage from './pages/CompleteLandingPage'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -119,11 +119,11 @@ const AppContent: React.FC = () => {
   if (profile?.role === 'ADMIN') {
     return (
       <FilterProvider>
-        <GovDashboard />
+        <SEMADashboard />
       </FilterProvider>
     )
   } else {
-    return <GovDashboard />
+    return <SEMADashboard />
   }
 }
 
