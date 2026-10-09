@@ -11,11 +11,15 @@ import {
   TrendingUp,
   TrendingDown,
   Search,
-  Download
+  Download,
+  Settings,
+  UserPlus,
+  ClipboardList
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useTickets } from '../hooks/useTickets'
 import { allCounties } from '../data/kenyaAdministrative'
+import TaskAssignment from './TaskAssignment'
 import {
   PieChart,
   Pie,
@@ -58,9 +62,13 @@ const SEMADashboardComplete: React.FC = () => {
   
   // Table state
   const [searchTerm, setSearchTerm] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
+  const [tablePage, setTablePage] = useState(1)
   const [selectedMapCounty, setSelectedMapCounty] = useState<string | null>(null)
   const [mapTab, setMapTab] = useState<'functional' | 'total' | 'workforce'>('functional')
+  
+  // Navigation state
+  const [navPage, setNavPage] = useState<'dashboard' | 'assign-tasks'>('dashboard')
+  const [showMenuDropdown, setShowMenuDropdown] = useState(false)
   
   const rowsPerPage = 8
 
@@ -229,9 +237,9 @@ const SEMADashboardComplete: React.FC = () => {
   , [countyData, searchTerm])
 
   const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * rowsPerPage
+    const start = (tablePage - 1) * rowsPerPage
     return filteredCountyData.slice(start, start + rowsPerPage)
-  }, [filteredCountyData, currentPage])
+  }, [filteredCountyData, tablePage])
 
   const totalPages = Math.ceil(filteredCountyData.length / rowsPerPage)
 
@@ -313,43 +321,96 @@ const SEMADashboardComplete: React.FC = () => {
         </div>
       )}
 
-      <div className="min-h-screen bg-gray-50">
-        {/* Navigation Header */}
-        <nav className="bg-white shadow-sm sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              {/* Logo */}
-              <button 
-                onClick={scrollToTop} 
-                className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
-              >
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <Building2 className="h-6 w-6 text-white" />
-                </div>
-                <span className="text-xl font-bold text-blue-600">SEMA</span>
-              </button>
-
-              {/* Center Navigation */}
-              <div className="hidden md:flex items-center space-x-8">
-                <button
-                  onClick={scrollToTop}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Dashboard
-                </button>
+      {/* Navigation Header - Always visible */}
+      <nav className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <button 
+              onClick={scrollToTop} 
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+            >
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <Building2 className="h-6 w-6 text-white" />
               </div>
+              <span className="text-xl font-bold text-blue-600">SEMA</span>
+            </button>
 
-              {/* Right Navigation */}
+            {/* Center Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
               <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                onClick={() => { setNavPage('dashboard'); setShowMenuDropdown(false) }}
+                className={`text-gray-700 hover:text-blue-600 font-medium transition-colors ${
+                  navPage === 'dashboard' ? 'text-blue-600 border-b-2 border-blue-600 pb-1' : ''
+                }`}
               >
-                <LogOut className="h-4 w-4" />
-                <span>Logout</span>
+                Dashboard
               </button>
+
+              {/* Admin Menu Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowMenuDropdown(!showMenuDropdown)}
+                  className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  <Settings className="h-4 w-4" />
+                  <span>Admin</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform ${showMenuDropdown ? 'rotate-180' : ''}`} />
+                </button>
+
+                {showMenuDropdown && (
+                  <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                    <button
+                      onClick={() => {
+                        setNavPage('assign-tasks')
+                        setShowMenuDropdown(false)
+                      }}
+                      className="w-full px-4 py-2 text-left hover:bg-blue-50 transition-colors flex items-center space-x-3"
+                    >
+                      <UserPlus className="h-4 w-4 text-blue-600" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">Assign Tasks</p>
+                        <p className="text-xs text-gray-500">AI-powered team assignment</p>
+                      </div>
+                    </button>
+
+                    <div className="border-t border-gray-100 my-2"></div>
+
+                    <button
+                      onClick={() => {
+                        setNavPage('dashboard')
+                        setShowMenuDropdown(false)
+                      }}
+                      className="w-full px-4 py-2 text-left hover:bg-blue-50 transition-colors flex items-center space-x-3"
+                    >
+                      <ClipboardList className="h-4 w-4 text-gray-600" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">View Dashboard</p>
+                        <p className="text-xs text-gray-500">Overview and analytics</p>
+                      </div>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
+
+            {/* Right Navigation */}
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </button>
           </div>
-        </nav>
+        </div>
+      </nav>
+
+      {/* Page Body - Conditional */}
+      {navPage === 'assign-tasks' ? (
+        <TaskAssignment onBack={() => setNavPage('dashboard')} />
+      ) : (
+        <div className="min-h-screen bg-gray-50">
 
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white py-12">
@@ -858,7 +919,7 @@ const SEMADashboardComplete: React.FC = () => {
                     value={searchTerm}
                     onChange={(e) => {
                       setSearchTerm(e.target.value)
-                      setCurrentPage(1)
+                      setTablePage(1)
                     }}
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -914,19 +975,19 @@ const SEMADashboardComplete: React.FC = () => {
             {/* Pagination */}
             <div className="mt-4 flex items-center justify-between">
               <div className="text-sm text-gray-600">
-                Showing {((currentPage - 1) * rowsPerPage) + 1} - {Math.min(currentPage * rowsPerPage, filteredCountyData.length)} of {filteredCountyData.length} counties
+                Showing {((tablePage - 1) * rowsPerPage) + 1} - {Math.min(tablePage * rowsPerPage, filteredCountyData.length)} of {filteredCountyData.length} counties
               </div>
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
+                  onClick={() => setTablePage(Math.max(1, tablePage - 1))}
+                  disabled={tablePage === 1}
                   className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
                   Previous
                 </button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
                   .filter(page => {
-                    const distance = Math.abs(page - currentPage)
+                    const distance = Math.abs(page - tablePage)
                     return page === 1 || page === totalPages || distance <= 1
                   })
                   .map((page, index, array) => {
@@ -935,9 +996,9 @@ const SEMADashboardComplete: React.FC = () => {
                       <React.Fragment key={page}>
                         {showEllipsis && <span className="px-2 text-gray-500">...</span>}
                         <button
-                          onClick={() => setCurrentPage(page)}
+                          onClick={() => setTablePage(page)}
                           className={`px-3 py-1 rounded-md text-sm ${
-                            currentPage === page
+                            tablePage === page
                               ? 'bg-blue-600 text-white'
                               : 'border border-gray-300 hover:bg-gray-50'
                           }`}
@@ -948,8 +1009,8 @@ const SEMADashboardComplete: React.FC = () => {
                     )
                   })}
                 <button
-                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                  disabled={currentPage === totalPages}
+                  onClick={() => setTablePage(Math.min(totalPages, tablePage + 1))}
+                  disabled={tablePage === totalPages}
                   className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
                   Next
@@ -968,7 +1029,8 @@ const SEMADashboardComplete: React.FC = () => {
             </div>
           </div>
         </footer>
-      </div>
+        </div>
+      )}
     </>
   )
 }
