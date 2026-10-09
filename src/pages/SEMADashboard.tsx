@@ -15,7 +15,8 @@ import {
   ArrowDown,
   Building2,
   Home,
-  Activity
+  Activity,
+  LogOut
 } from 'lucide-react'
 
 // SEMA-specific data matching DHA structure
@@ -53,59 +54,73 @@ const SEMADashboard: React.FC = () => {
   const [selectedCounty, setSelectedCounty] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
 
+  // Handler functions for navigation
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleLogout = () => {
+    // Navigate back to landing page
+    window.location.href = '/'
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Top Navigation - DHA Style */}
+      {/* Top Navigation - Green Theme */}
       <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo Section */}
+            {/* Logo Section - Clickable */}
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+              <button 
+                onClick={scrollToTop}
+                className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+              >
+                <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
                   <Activity className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-blue-600">SEMA</h1>
+                  <h1 className="text-xl font-bold text-green-600">SEMA</h1>
                   <p className="text-xs text-gray-500">Voice Platform</p>
                 </div>
-              </div>
+              </button>
             </div>
             
-            {/* Navigation Links */}
+            {/* Navigation Links - Only Dashboard */}
             <div className="hidden md:flex items-center space-x-8">
-              <button className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">
-                Home
-              </button>
-              <button className="px-3 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">
+              <button 
+                onClick={scrollToTop}
+                className="px-3 py-2 text-sm font-medium text-green-600 border-b-2 border-green-600"
+              >
                 Dashboard
               </button>
-              <button className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">About</button>
-              <button className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">Resources</button>
-              <button className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">FAQs</button>
             </div>
 
-            {/* Login Button */}
+            {/* Logout Button */}
             <div className="flex items-center space-x-4">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
-                Login
+              <button 
+                onClick={handleLogout}
+                className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
               </button>
             </div>
           </div>
         </div>
       </nav>
-      {/* Hero Section - Matching DHA Style */}
-      <div className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
+      {/* Hero Section - Green Theme */}
+      <div className="relative bg-gradient-to-r from-green-900 via-green-800 to-green-900 overflow-hidden">
         {/* Background Image Overlay */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-black bg-opacity-40"></div>
           {/* You can add background image here */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/50 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-green-900/50 to-transparent"></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Breadcrumb */}
-          <div className="flex items-center space-x-2 text-blue-200 text-sm mb-6">
+          <div className="flex items-center space-x-2 text-green-200 text-sm mb-6">
             <Home className="w-4 h-4" />
             <span>/</span>
             <span>Dashboard</span>
@@ -113,13 +128,13 @@ const SEMADashboard: React.FC = () => {
           
           {/* Title Section */}
           <div className="mb-8">
-            <div className="bg-blue-800 bg-opacity-50 rounded-md px-3 py-1 inline-block mb-4">
-              <span className="text-blue-200 text-sm font-medium">Dashboard</span>
+            <div className="bg-green-800 bg-opacity-50 rounded-md px-3 py-1 inline-block mb-4">
+              <span className="text-green-200 text-sm font-medium">Dashboard</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               National SEMA Overview
             </h1>
-            <p className="text-xl text-blue-100 max-w-3xl">
+            <p className="text-xl text-green-100 max-w-3xl">
               Monitor citizen service tickets, functional status, workforce coverage and county-level 
               performance across Kenya's consumer advocacy platform.
             </p>
@@ -135,7 +150,7 @@ const SEMADashboard: React.FC = () => {
             <select
               value={selectedCounty}
               onChange={(e) => setSelectedCounty(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="all">All counties</option>
               {countiesPerformance.map((county) => (
@@ -146,7 +161,7 @@ const SEMADashboard: React.FC = () => {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="all">All functional statuses</option>
               <option value="functional">Functional</option>
@@ -167,7 +182,7 @@ const SEMADashboard: React.FC = () => {
 
         {/* View Tabs */}
         <div className="flex items-center space-x-6 mb-8 border-b border-gray-200">
-          <div className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">
+          <div className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-green-600 border-b-2 border-green-600">
             <span className="font-medium">Active view:</span>
             <span>All counties • All functional statuses</span>
           </div>
@@ -180,8 +195,8 @@ const SEMADashboard: React.FC = () => {
           {/* Total Tickets */}
           <div className="bg-white rounded-lg shadow-sm border p-6">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <FileText className="w-5 h-5 text-blue-600" />
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                <FileText className="w-5 h-5 text-green-600" />
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Tickets</p>
@@ -328,7 +343,7 @@ const SEMADashboard: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   <span className="text-sm text-gray-700">Functional</span>
                 </div>
                 <div className="text-right">
@@ -385,7 +400,7 @@ const SEMADashboard: React.FC = () => {
                     <div className="flex items-center space-x-2">
                       <div className="flex-1 bg-gray-200 rounded-full h-2">
                         <div 
-                          className="bg-blue-500 h-2 rounded-full transition-all duration-300" 
+                          className="bg-green-500 h-2 rounded-full transition-all duration-300" 
                           style={{ width: `${county.percentage}%` }}
                         ></div>
                       </div>
@@ -405,7 +420,7 @@ const SEMADashboard: React.FC = () => {
               <p className="text-sm text-gray-600">County comparison derived from the currently loaded live ticket rows.</p>
             </div>
             <div className="text-right">
-              <span className="text-sm font-semibold text-blue-600">{semaStats.totalTickets.toLocaleString()} records in view</span>
+              <span className="text-sm font-semibold text-green-600">{semaStats.totalTickets.toLocaleString()} records in view</span>
             </div>
           </div>
           
@@ -418,7 +433,7 @@ const SEMADashboard: React.FC = () => {
                 <div className="flex-1 flex items-center space-x-2">
                   <div className="flex-1 bg-gray-200 rounded-full h-6 relative overflow-hidden">
                     <div 
-                      className="bg-blue-500 h-6 rounded-full transition-all duration-300" 
+                      className="bg-green-500 h-6 rounded-full transition-all duration-300" 
                       style={{ width: `${county.functionalRate}%` }}
                     ></div>
                     {county.functionalRate < 95 && (
@@ -480,7 +495,7 @@ const SEMADashboard: React.FC = () => {
             <button className="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
               Functional Rate
             </button>
-            <button className="px-3 py-1 text-xs font-medium bg-blue-600 text-white rounded">
+            <button className="px-3 py-1 text-xs font-medium bg-green-600 text-white rounded">
               Total Tickets
             </button>
             <button className="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
@@ -535,7 +550,7 @@ const SEMADashboard: React.FC = () => {
                 </div>
               </div>
               
-              <button className="w-full mt-4 bg-blue-600 text-white py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+              <button className="w-full mt-4 bg-green-600 text-white py-2 rounded-md text-sm font-medium hover:bg-green-700">
                 View County Summary
               </button>
             </div>
@@ -558,7 +573,7 @@ const SEMADashboard: React.FC = () => {
                   className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700">
+              <button className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700">
                 <Download className="w-4 h-4" />
                 <span>Export CSV</span>
               </button>
@@ -597,7 +612,7 @@ const SEMADashboard: React.FC = () => {
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="text-blue-600">{county.workforce}</span>
+                      <span className="text-green-600">{county.workforce}</span>
                     </td>
                     <td className="py-3 px-4">
                       <span className="text-gray-900">{county.households.toLocaleString()}</span>
@@ -614,7 +629,8 @@ const SEMADashboard: React.FC = () => {
             </div>
             <div className="flex items-center space-x-2">
               <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">‹</button>
-              <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded">1</button>
+              <button 
+                className="px-3 py-1 text-sm bg-green-600 text-white rounded">1</button>
               <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">2</button>
               <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">3</button>
               <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">4</button>
@@ -627,11 +643,11 @@ const SEMADashboard: React.FC = () => {
         </div>
       </div>
       
-      {/* Footer - Blue matching DHA */}
-      <footer className="bg-blue-600 mt-16">
+      {/* Footer - Green matching SEMA */}
+      <footer className="bg-green-600 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center">
-            <p className="text-blue-100 text-sm">
+            <p className="text-green-100 text-sm">
               © 2026 SEMA Voice Platform. All rights reserved. | Government of Kenya
             </p>
           </div>
