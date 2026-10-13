@@ -1,0 +1,31 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Implement DHA-style header navigation and white/green theme. Replace existing header with SEMA logo (left), single 'Dashboard' tab, and Logout button (right). Apply white background with green accent colors (#10b981, green-600) throughout. Implement click handlers: logo click scrolls to top, Dashboard click scrolls to top, Logout button calls useAuth().logout() and navigates to landing page.",
+  "status": "pending",
+  "steps": [
+    "Read context.json and FEAT-001.json to understand requirements",
+    "Replace the entire navigation header section in SEMADashboardComplete.tsx (lines ~108-135) with: white background, SEMA logo + Activity icon on left, single 'Dashboard' navigation tab in center/left area, Logout button with LogOut icon on right using green-600 background",
+    "Update all color references: change current green-900/green-800 gradient backgrounds to green-600/green-700, ensure stat card accent colors use green-100 backgrounds with green-600 icons (replacing mixed purple/indigo), update all buttons to use green-600 hover:green-700",
+    "Implement three click handlers: scrollToTop function for logo, scrollToTop function for Dashboard tab, handleLogout function that calls logout() from useAuth() context then sets window.location.href = '/' to return to landing page",
+    "Update hero section (lines ~138-170) to use white text on green-600/green-700 gradient background with proper contrast, update breadcrumb to show 'Home / Dashboard', change title from 'National SEMA Overview' to 'National CHU Overview', update subtitle to mention Community Health Units"
+  ],
+  "acceptance_criteria": [
+    "Header shows only: SEMA logo (left), Dashboard tab (center-left), Logout button (right) - no Home/About/Preferences/FAQs",
+    "Entire dashboard uses white/green color scheme matching landing page (green-600 primary, white backgrounds)",
+    "Clicking logo scrolls page to top smoothly",
+    "Clicking Dashboard tab scrolls page to top smoothly", 
+    "Clicking Logout button logs user out and returns to landing page (CompleteLandingPage)",
+    "Hero section displays 'National CHU Overview' title with Community Health Unit context"
+  ],
+  "verification": [
+    "npm run build:check passes with no TypeScript errors",
+    "Start dev server with npm run dev, login with admin@safaricom.co.ke / admin123",
+    "Verify header shows only logo, Dashboard, and Logout button",
+    "Click logo and Dashboard - both scroll to top",
+    "Click Logout - returns to landing page and user is logged out",
+    "Verify all green colors are green-600 family, all backgrounds are white with subtle shadows"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

@@ -1,0 +1,24 @@
+{
+  "project_type": "React + TypeScript SPA with Vite, TailwindCSS styling, Supabase backend",
+  "language": "TypeScript",
+  "build_system": "Vite - npm scripts: dev (dev server), build (production), build:check (with type checking)",
+  "test_framework": "No test framework currently configured in project",
+  "build_command": "npm run build",
+  "test_command": "npm run build:check (TypeScript checking only, no unit tests)",
+  "verification_instructions": "1. Run `npm run build:check` to verify TypeScript compilation. 2. Start dev server with `npm run dev` and manually verify in browser at localhost:5173. 3. Test with authenticated user to see dashboard (use admin@safaricom.co.ke / admin123).",
+  "snapshot_or_generated_files": null,
+  "environment_constraints": "Dev server runs on port 5173. Supabase credentials in .env.local (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY). Authentication required to view dashboard - must be logged in. Project deployed on Vercel.",
+  "contribution_requirements": "No AGENTS.md or CONTRIBUTING.md found in project root. Standard React/TypeScript patterns apply.",
+  "key_patterns": "1. Supabase integration via hooks (useTickets, useAuth). 2. Context providers wrap app (AuthProvider, FilterProvider). 3. Lucide React for all icons. 4. TailwindCSS utility classes for styling. 5. Green (#10b981, green-600) as primary brand color per landing page. 6. White backgrounds with subtle shadows/borders. 7. useAuth hook provides: user, profile, isAuthenticated, isAdmin, loading, logout. 8. useTickets hook provides: tickets[], loading, error, refetch, updateTicketStatus. 9. Ticket statuses: 'open', 'pending', 'in-progress', 'closed', 'resolved' - map to CHU equivalents.",
+  "relevant_files": [
+    "src/pages/SEMADashboardComplete.tsx (current file - will be completely replaced)",
+    "src/hooks/useTickets.ts (live data hook returning tickets[] with id, status, county, created_at, assigned_to)",
+    "src/contexts/AuthContext.tsx (provides useAuth hook with logout function and user info)",
+    "src/data/kenyaAdministrative.ts (allCounties array with all 47 counties: id, name, capital, region, population)",
+    "src/data/kenyaCountiesData.ts (kenyaCountiesData array with performance data per county)",
+    "src/pages/CompleteLandingPage.tsx (reference for white/green theme styling)",
+    "src/App.tsx (shows how SEMADashboardComplete is mounted after authentication)",
+    "package.json (dependencies: recharts ^2.7.2, lucide-react ^0.263.1, tailwindcss, react-router-dom ^6.15.0)"
+  ],
+  "directory_structure": "src/pages/ - page components; src/hooks/ - custom hooks for data fetching; src/contexts/ - React contexts for auth/state; src/data/ - static data files (counties, mock data); src/components/ - reusable components; src/services/ - API service layers (tickets.service.ts)"
+}
