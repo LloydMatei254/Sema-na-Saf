@@ -72,8 +72,8 @@ const SEMADashboardComplete: React.FC = () => {
   
   const rowsPerPage = 8
 
-  // Map ticket status to CHU functionality
-  const mapTicketStatusToCHU = useCallback((status: string): 'functional' | 'semiFunctional' | 'nonFunctional' | 'closed' => {
+  // Map ticket status to SEMA functionality
+  const mapTicketStatusToSEMA = useCallback((status: string): 'functional' | 'semiFunctional' | 'nonFunctional' | 'closed' => {
     const statusLower = status.toLowerCase()
     if (statusLower === 'open' || statusLower === 'pending' || statusLower === 'resolved') return 'functional'
     if (statusLower === 'in-progress' || statusLower === 'assigned') return 'semiFunctional'
@@ -127,7 +127,7 @@ const SEMADashboardComplete: React.FC = () => {
     // Filter tickets by applied filters
     const filteredTickets = tickets.filter(ticket => {
       const countyMatch = appliedCounty === 'All counties' || ticket.county === appliedCounty
-      const chuStatus = mapTicketStatusToCHU(ticket.status || '')
+      const semaStatus = mapTicketStatusToSEMA(ticket.status || '')
       const statusMap: Record<string, string> = {
         'Functional': 'functional',
         'Semi-Functional': 'semiFunctional',
@@ -135,7 +135,7 @@ const SEMADashboardComplete: React.FC = () => {
         'Closed': 'closed'
       }
       const statusMatch = appliedStatus === 'All functional statuses' || 
-                         chuStatus === statusMap[appliedStatus]
+                         semaStatus === statusMap[appliedStatus]
       return countyMatch && statusMatch
     })
 
@@ -166,10 +166,10 @@ const SEMADashboardComplete: React.FC = () => {
       const stats = countyMap.get(countyName)!
       stats.total++
       
-      const chuStatus = mapTicketStatusToCHU(ticket.status || '')
-      if (chuStatus === 'functional') stats.functional++
-      else if (chuStatus === 'semiFunctional') stats.semiFunctional++
-      else if (chuStatus === 'closed') stats.closed++
+      const semaStatus = mapTicketStatusToSEMA(ticket.status || '')
+      if (semaStatus === 'functional') stats.functional++
+      else if (semaStatus === 'semiFunctional') stats.semiFunctional++
+      else if (semaStatus === 'closed') stats.closed++
       else stats.nonFunctional++
       
       if (ticket.assigned_to) {
@@ -186,7 +186,7 @@ const SEMADashboardComplete: React.FC = () => {
       functionalRate: stats.total > 0 ? (stats.functional / stats.total) * 100 : 0,
       shareOfRegistry: totalTickets > 0 ? (stats.total / totalTickets) * 100 : 0
     })).sort((a, b) => b.total - a.total)
-  }, [tickets, appliedCounty, appliedStatus, mapTicketStatusToCHU, generateFallbackData])
+  }, [tickets, appliedCounty, appliedStatus, mapTicketStatusToSEMA, generateFallbackData])
 
   // Aggregate stats
   const aggregateStats = useMemo(() => {
@@ -268,7 +268,7 @@ const SEMADashboardComplete: React.FC = () => {
   }, [refetch])
 
   const exportCSV = useCallback(() => {
-    const headers = ['County', 'Total CHUs', 'Functional Rate (%)', 'Workforce', 'Households Covered']
+    const headers = ['County', 'Total Tickets', 'Functional Rate (%)', 'Workforce', 'Households Covered']
     const rows = filteredCountyData.map(c => [
       c.county,
       c.total,
@@ -286,7 +286,7 @@ const SEMADashboardComplete: React.FC = () => {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `sema-chu-data-${new Date().toISOString().split('T')[0]}.csv`
+    a.download = `sema-tickets-data-${new Date().toISOString().split('T')[0]}.csv`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -424,9 +424,9 @@ const SEMADashboardComplete: React.FC = () => {
             </div>
             
             {/* Title */}
-            <h1 className="text-4xl font-bold mb-2">National CHU Overview</h1>
+            <h1 className="text-4xl font-bold mb-2">National SEMA Overview</h1>
             <p className="text-blue-100 text-lg">
-              Monitor community Health Unit registration, functional status, workforce coverage and county-level performance.
+              Monitor consumer advocacy tickets, resolution status, team coverage and county-level performance.
             </p>
           </div>
         </div>
@@ -533,7 +533,7 @@ const SEMADashboardComplete: React.FC = () => {
 
           {/* Stats Cards Row 1 */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {/* Total CHUs */}
+            {/* Total Tickets */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -547,10 +547,10 @@ const SEMADashboardComplete: React.FC = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-1">
                 {aggregateStats.total.toLocaleString()}
               </h3>
-              <p className="text-gray-600 text-sm">Total CHUs</p>
+              <p className="text-gray-600 text-sm">Total Tickets</p>
             </div>
 
-            {/* Functional CHUs */}
+            {/* Functional Tickets */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -564,10 +564,10 @@ const SEMADashboardComplete: React.FC = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-1">
                 {aggregateStats.functional.toLocaleString()}
               </h3>
-              <p className="text-gray-600 text-sm">Functional CHUs</p>
+              <p className="text-gray-600 text-sm">Functional Tickets</p>
             </div>
 
-            {/* Semi-Functional CHUs */}
+            {/* Semi-Functional Tickets */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -581,13 +581,13 @@ const SEMADashboardComplete: React.FC = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-1">
                 {aggregateStats.semiFunctional.toLocaleString()}
               </h3>
-              <p className="text-gray-600 text-sm">Semi-Functional CHUs</p>
+              <p className="text-gray-600 text-sm">Semi-Functional Tickets</p>
             </div>
           </div>
 
           {/* Stats Cards Row 2 */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {/* Non-Functional CHUs */}
+            {/* Non-Functional Tickets */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
@@ -601,10 +601,10 @@ const SEMADashboardComplete: React.FC = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-1">
                 {aggregateStats.nonFunctional.toLocaleString()}
               </h3>
-              <p className="text-gray-600 text-sm">Non-Functional CHUs</p>
+              <p className="text-gray-600 text-sm">Non-Functional Tickets</p>
             </div>
 
-            {/* Community Health Promoters */}
+            {/* Service Agents */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -615,10 +615,10 @@ const SEMADashboardComplete: React.FC = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-1">
                 {aggregateStats.workforce.toLocaleString()}
               </h3>
-              <p className="text-gray-600 text-sm">Community Health Promoters</p>
+              <p className="text-gray-600 text-sm">Service Agents</p>
             </div>
 
-            {/* Households Covered */}
+            {/* Citizens Covered */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -629,7 +629,7 @@ const SEMADashboardComplete: React.FC = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-1">
                 {formatNumber(aggregateStats.households)}
               </h3>
-              <p className="text-gray-600 text-sm">Households Covered</p>
+              <p className="text-gray-600 text-sm">Citizens Covered</p>
             </div>
           </div>
 
@@ -637,7 +637,7 @@ const SEMADashboardComplete: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Donut Chart */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">CHU Functionality Distribution</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Ticket Resolution Distribution</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
@@ -685,7 +685,7 @@ const SEMADashboardComplete: React.FC = () => {
 
             {/* Top Counties Bar Chart */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Counties by Established CHUs</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Counties by Reported Tickets</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={topCountiesData} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" />
@@ -693,7 +693,7 @@ const SEMADashboardComplete: React.FC = () => {
                   <YAxis dataKey="name" type="category" width={80} />
                   <Tooltip 
                     formatter={(value: any, name: any, props: any) => [
-                      `${value} CHUs (${props.payload.percentage.toFixed(1)}%)`,
+                      `${value} Tickets (${props.payload.percentage.toFixed(1)}%)`,
                       'Total'
                     ]}
                   />
@@ -706,9 +706,9 @@ const SEMADashboardComplete: React.FC = () => {
           {/* County Functionality Stacked Bars */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">CHU Functionality by County</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Ticket Resolution by County</h3>
               <p className="text-sm text-gray-600 mb-2">
-                County comparison derived from the currently loaded live CHU rows.
+                County comparison derived from the currently loaded live ticket rows.
               </p>
               <p className="text-xs text-gray-500">
                 {countyData.length} records in view
@@ -755,16 +755,16 @@ const SEMADashboardComplete: React.FC = () => {
           {/* Interactive Kenya Map */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">CHU Performance by County</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Ticket Performance by County</h3>
               <p className="text-sm text-gray-600 mb-4">
-                Interactive choropleth map using live CHU rows grouped by county.
+                Interactive choropleth map using live ticket rows grouped by county.
               </p>
               
               {/* Map Tabs */}
               <div className="flex space-x-2 mb-4">
                 {[
                   { key: 'functional' as const, label: 'Functional Rate' },
-                  { key: 'total' as const, label: 'Total CHUs' },
+                  { key: 'total' as const, label: 'Total Tickets' },
                   { key: 'workforce' as const, label: 'Workforce' }
                 ].map(tab => (
                   <button
@@ -796,7 +796,7 @@ const SEMADashboardComplete: React.FC = () => {
                   <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3">
                     <p className="text-xs font-semibold text-gray-700 mb-2">
                       {mapTab === 'functional' && 'Functional Rate'}
-                      {mapTab === 'total' && 'Total CHUs'}
+                      {mapTab === 'total' && 'Total Tickets'}
                       {mapTab === 'workforce' && 'Workforce'}
                     </p>
                     <div className="space-y-1 text-xs">
@@ -865,7 +865,7 @@ const SEMADashboardComplete: React.FC = () => {
                             <span className="font-medium">Today</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Total CHUs:</span>
+                            <span className="text-gray-600">Total Tickets:</span>
                             <span className="font-medium">{county.total}</span>
                           </div>
                           <div className="flex justify-between">
@@ -906,7 +906,7 @@ const SEMADashboardComplete: React.FC = () => {
             <div className="mb-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-1">County Comparison</h3>
               <p className="text-sm text-gray-600 mb-4">
-                Comparison of CHU availability, functionality, and coverage.
+                Comparison of ticket availability, resolution rate, and coverage.
               </p>
               
               {/* Search and Export */}
@@ -940,10 +940,10 @@ const SEMADashboardComplete: React.FC = () => {
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">County</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Total CHUs</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Functional Rate</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Workforce</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Households Covered</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Total Tickets</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Resolution Rate</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Service Agents</th>
+                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Citizens Covered</th>
                   </tr>
                 </thead>
                 <tbody>
