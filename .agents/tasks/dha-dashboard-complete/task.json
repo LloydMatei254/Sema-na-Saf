@@ -1,7 +1,0 @@
-{
-  "task_id": "dha-dashboard-complete",
-  "task_description": "Build a complete DHA-style government dashboard for SEMA with white/green theme, proper header navigation (logo, dashboard, logout), county filters, live Supabase data visualization, stats cards, charts, and interactive county comparison table",
-  "status": "pending",
-  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003"],
-  "blocked_reason": null
-}
